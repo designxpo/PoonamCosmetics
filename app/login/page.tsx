@@ -1,0 +1,149 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import Header from '@/components/Header';
+import Footer from '@/components/Footer';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { useAuthStore } from '@/store/authStore';
+import toast from 'react-hot-toast';
+import { FiMail, FiLock } from 'react-icons/fi';
+
+export default function LoginPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { login } = useAuthStore();
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+  });
+  const [isLoading, setIsLoading] = useState(false);
+  const redirectUrl = searchParams.get('redirect') || '/account';
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        login(data.user, data.token);
+        toast.success('Welcome back!');
+        router.push(redirectUrl);
+      } else {
+        toast.error(data.error || 'Login failed');
+      }
+    } catch (error) {
+      toast.error('Something went wrong. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  return (
+    <>
+      <Header />
+      <main className="min-h-screen bg-slate-50 pb-20">
+        <section className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white py-20">
+          <div className="container mx-auto px-4 text-center">
+            <p className="uppercase tracking-[0.3em] text-xs text-secondary-200">Welcome Back</p>
+            <h1 className="mt-4 text-4xl md:text-5xl font-semibold max-w-3xl mx-auto">
+              Sign In to Your Account
+            </h1>
+            <p className="mt-6 max-w-2xl mx-auto text-white/70">
+              Access your orders, wishlist, and exclusive member benefits
+            </p>
+          </div>
+        </section>
+
+        <div className="container mx-auto px-4 -mt-12 relative z-10">
+          <div className="max-w-md mx-auto rounded-sm border border-white/60 bg-white/90 backdrop-blur shadow-xl p-8">
+            <form onSubmit={handleSubmit} className="space-y-5">
+              <div>
+                <label className="block text-sm font-semibold uppercase tracking-[0.2em] text-slate-500 mb-2">
+                  Email Address
+                </label>
+                <div className="relative">
+                  <FiMail className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                    className="w-full pl-12 pr-4 py-3 rounded-none border border-slate-200 bg-white text-sm text-slate-700 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                    placeholder="your@email.com"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold uppercase tracking-[0.2em] text-slate-500 mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <FiLock className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" />
+                  <input
+                    type="password"
+                    name="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                    className="w-full pl-12 pr-4 py-3 rounded-none border border-slate-200 bg-white text-sm text-slate-700 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
+                    placeholder="Enter your password"
+                  />
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoading}
+                className="w-full btn-primary text-lg py-4 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {isLoading ? 'Signing In...' : 'Sign In'}
+              </button>
+
+              <div className="text-center pt-4 space-y-3">
+                <p className="text-sm text-slate-600">
+                  Don't have an account?{' '}
+                  <Link 
+                    href={`/register${redirectUrl !== '/account' ? `?redirect=${redirectUrl}` : ''}`} 
+                    className="text-primary-600 hover:text-primary-700 font-semibold"
+                  >
+                    Create one
+                  </Link>
+                </p>
+                <p className="text-sm">
+                  <Link href="/track-order" className="text-secondary-600 hover:text-secondary-700 font-semibold">
+                    Track Order Without Login →
+                  </Link>
+                </p>
+              </div>
+            </form>
+
+            <div className="mt-8 pt-8 border-t border-slate-200">
+              <p className="text-xs text-slate-500 text-center">
+                By signing in, you agree to our Terms of Service and Privacy Policy
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+      <Footer />
+    </>
+  );
+}
