@@ -11,7 +11,6 @@ export default function AddProductPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
-  const [imageUrl, setImageUrl] = useState('');
   
   const [formData, setFormData] = useState({
     name: '',
@@ -52,13 +51,12 @@ export default function AddProductPage() {
     }
   };
 
-  const handleAddImage = () => {
-    if (imageUrl.trim()) {
+  const handleAddImage = (url: string) => {
+    if (url.trim()) {
       setFormData(prev => ({
         ...prev,
-        images: [...prev.images, imageUrl.trim()]
+        images: [...prev.images, url.trim()]
       }));
-      setImageUrl('');
     }
   };
 
@@ -239,21 +237,11 @@ export default function AddProductPage() {
             <div className="space-y-3">
               {/* Image Upload Component */}
               <ImageUpload
-                value={imageUrl}
-                onChange={setImageUrl}
-                label=""
+                value=""
+                onChange={handleAddImage}
+                label="Upload product image"
                 required={false}
               />
-              
-              <button
-                type="button"
-                onClick={handleAddImage}
-                disabled={!imageUrl.trim()}
-                className="w-full px-4 py-2 bg-slate-900 text-white rounded-sm hover:bg-slate-800 disabled:bg-slate-400 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                <FiPlus size={18} />
-                Add to Gallery
-              </button>
 
               {formData.images.length > 0 && (
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mt-4">

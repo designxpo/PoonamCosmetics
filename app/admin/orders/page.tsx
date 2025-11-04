@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import Link from 'next/link';
-import { FiEye, FiDownload, FiFilter } from 'react-icons/fi';
+import { FiEye, FiDownload, FiFilter, FiCheck } from 'react-icons/fi';
+import toast from 'react-hot-toast';
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState<any[]>([]);
@@ -11,6 +12,9 @@ export default function AdminOrders() {
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
+  const [bulkStatus, setBulkStatus] = useState('');
+  const [updatingBulk, setUpdatingBulk] = useState(false);
 
   useEffect(() => {
     fetchOrders();
@@ -50,6 +54,65 @@ export default function AdminOrders() {
     }
 
     setFilteredOrders(filtered);
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedOrders.length === filteredOrders.length) {
+      setSelectedOrders([]);
+    } else {
+      setSelectedOrders(filteredOrders.map(order => order._id));
+    }
+  };
+
+  const toggleSelectOrder = (orderId: string) => {
+    setSelectedOrders(prev =>
+      prev.includes(orderId)
+        ? prev.filter(id => id !== orderId)
+        : [...prev, orderId]
+    );
+  };
+
+  const handleBulkStatusUpdate = async () => {
+    if (selectedOrders.length === 0) {
+      toast.error('Please select at least one order');
+      return;
+    }
+
+    if (!bulkStatus) {
+      toast.error('Please select a status');
+      return;
+    }
+
+    setUpdatingBulk(true);
+
+    try {
+      const response = await fetch('/api/orders/bulk-update', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          orderIds: selectedOrders,
+          status: bulkStatus,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success(`Successfully updated ${data.modifiedCount} order(s)`);
+        setSelectedOrders([]);
+        setBulkStatus('');
+        fetchOrders();
+      } else {
+        toast.error(data.error || 'Failed to update orders');
+      }
+    } catch (error) {
+      console.error('Error updating orders:', error);
+      toast.error('Failed to update orders');
+    } finally {
+      setUpdatingBulk(false);
+    }
   };
 
   const getStatusBadgeClass = (status: string) => {
@@ -121,12 +184,62 @@ export default function AdminOrders() {
           </div>
         </div>
 
+        {/* Bulk Actions */}
+        {selectedOrders.length > 0 && (
+          <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+              <div className="flex items-center gap-2">
+                <FiCheck className="text-primary-600" size={20} />
+                <span className="text-sm font-medium text-primary-900">
+                  {selectedOrders.length} order(s) selected
+                </span>
+              </div>
+              <div className="flex items-center gap-2 flex-1">
+                <select
+                  value={bulkStatus}
+                  onChange={(e) => setBulkStatus(e.target.value)}
+                  className="px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                >
+                  <option value="">Select new status</option>
+                  <option value="pending">Pending</option>
+                  <option value="confirmed">Confirmed</option>
+                  <option value="processing">Processing</option>
+                  <option value="shipped">Shipped</option>
+                  <option value="delivered">Delivered</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+                <button
+                  onClick={handleBulkStatusUpdate}
+                  disabled={!bulkStatus || updatingBulk}
+                  className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors font-medium"
+                >
+                  {updatingBulk ? 'Updating...' : 'Update Status'}
+                </button>
+                <button
+                  onClick={() => setSelectedOrders([])}
+                  className="px-4 py-2 text-slate-600 hover:text-slate-900 transition-colors"
+                >
+                  Clear Selection
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Orders Table */}
         <div className="bg-white rounded-lg shadow-sm border border-slate-200">
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead className="bg-slate-50">
                 <tr>
+                  <th className="px-6 py-3 text-left">
+                    <input
+                      type="checkbox"
+                      checked={filteredOrders.length > 0 && selectedOrders.length === filteredOrders.length}
+                      onChange={toggleSelectAll}
+                      className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
+                    />
+                  </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Order #</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Customer</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Items</th>
@@ -139,13 +252,21 @@ export default function AdminOrders() {
               <tbody className="divide-y divide-slate-200">
                 {filteredOrders.length === 0 ? (
                   <tr>
-                    <td colSpan={7} className="px-6 py-8 text-center text-slate-500">
+                    <td colSpan={8} className="px-6 py-8 text-center text-slate-500">
                       No orders found
                     </td>
                   </tr>
                 ) : (
                   filteredOrders.map((order) => (
                     <tr key={order._id} className="hover:bg-slate-50">
+                      <td className="px-6 py-4">
+                        <input
+                          type="checkbox"
+                          checked={selectedOrders.includes(order._id)}
+                          onChange={() => toggleSelectOrder(order._id)}
+                          className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
+                        />
+                      </td>
                       <td className="px-6 py-4 text-sm font-medium text-slate-900">
                         {order.orderNumber}
                       </td>

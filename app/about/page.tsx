@@ -1,5 +1,6 @@
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import PageHero from '@/components/PageHero';
 import Image from 'next/image';
 
 export default function AboutPage() {
@@ -7,17 +8,12 @@ export default function AboutPage() {
     <>
       <Header />
       <main className="min-h-screen bg-slate-50 pb-24">
-        <section className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white py-20">
-          <div className="container mx-auto px-4 text-center">
-            <p className="uppercase tracking-[0.3em] text-xs text-secondary-200">The Brand</p>
-            <h1 className="mt-4 text-4xl md:text-5xl font-semibold max-w-3xl mx-auto">
-              Crafting Luxurious Beauty Rituals
-            </h1>
-            <p className="mt-6 max-w-2xl mx-auto text-white/70">
-              We exist to empower every individual to feel runway-ready, every single day. Discover what makes Poonam Cosmetics the preferred choice for beauty enthusiasts.
-            </p>
-          </div>
-        </section>
+        <PageHero
+          page="about"
+          defaultEyebrow="The Brand"
+          defaultTitle="Crafting Luxurious Beauty Rituals"
+          defaultDescription="We exist to empower every individual to feel runway-ready, every single day. Discover what makes Poonam Cosmetics the preferred choice for beauty enthusiasts."
+        />
 
         <section className="container mx-auto px-4 -mt-12 relative z-10 space-y-16">
           {/* Story Section */}

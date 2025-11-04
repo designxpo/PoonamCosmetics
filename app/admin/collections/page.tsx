@@ -43,7 +43,7 @@ export default function AdminCollections() {
     
     // Validate image
     if (!formData.image) {
-      toast.error('Please upload an image or provide an image URL');
+      toast.error('Please upload an image');
       return;
     }
     

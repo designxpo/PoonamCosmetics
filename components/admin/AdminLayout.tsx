@@ -57,6 +57,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { name: 'Categories', icon: FiGrid, path: '/admin/categories' },
     { name: 'Orders', icon: FiShoppingBag, path: '/admin/orders' },
     { name: 'Banners', icon: FiImage, path: '/admin/banners' },
+    { name: 'Page Banners', icon: FiImage, path: '/admin/page-banners' },
     { name: 'Collections', icon: FiImage, path: '/admin/collections' },
     { name: 'Users', icon: FiUsers, path: '/admin/users' },
     { name: 'Preview', icon: FiEye, path: '/admin/preview' },

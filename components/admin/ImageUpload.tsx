@@ -98,52 +98,38 @@ export default function ImageUpload({ value, onChange, label, required }: ImageU
         )}
 
         {/* Upload Options */}
-        <div className="flex flex-col sm:flex-row gap-3">
+        <div>
           {/* File Upload Button */}
-          <div className="flex-1">
-            <input
-              ref={fileInputRef}
-              type="file"
-              accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
-              onChange={handleFileSelect}
-              className="hidden"
-              disabled={uploading}
-            />
-            <button
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              disabled={uploading}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-sm hover:bg-slate-800 disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors"
-            >
-              {uploading ? (
-                <>
-                  <FiLoader size={18} className="animate-spin" />
-                  <span>Uploading...</span>
-                </>
-              ) : (
-                <>
-                  <FiUpload size={18} />
-                  <span>Upload Image</span>
-                </>
-              )}
-            </button>
-          </div>
-
-          {/* URL Input */}
-          <div className="flex-1">
-            <input
-              type="url"
-              value={value}
-              onChange={(e) => onChange(e.target.value)}
-              placeholder="Or paste image URL"
-              className="w-full px-4 py-2 border border-slate-300 rounded-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-              disabled={uploading}
-            />
-          </div>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/jpeg,image/jpg,image/png,image/webp,image/gif"
+            onChange={handleFileSelect}
+            className="hidden"
+            disabled={uploading}
+          />
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploading}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-slate-900 text-white rounded-sm hover:bg-slate-800 disabled:bg-slate-400 disabled:cursor-not-allowed transition-colors"
+          >
+            {uploading ? (
+              <>
+                <FiLoader size={18} className="animate-spin" />
+                <span>Uploading...</span>
+              </>
+            ) : (
+              <>
+                <FiUpload size={18} />
+                <span>Upload Image</span>
+              </>
+            )}
+          </button>
         </div>
 
         <p className="text-xs text-slate-500">
-          Upload an image (max 5MB) or paste an image URL. Supported formats: JPG, PNG, WebP, GIF
+          Upload an image (max 5MB). Supported formats: JPG, PNG, WebP, GIF
         </p>
       </div>
     </div>

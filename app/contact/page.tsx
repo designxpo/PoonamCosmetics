@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
+import PageHero from '@/components/PageHero';
 import { FaWhatsapp, FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 import toast from 'react-hot-toast';
 
@@ -93,17 +94,12 @@ ${formData.message}
     <>
       <Header />
       <main className="min-h-screen bg-slate-50 pb-24">
-        <section className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white py-20">
-          <div className="container mx-auto px-4 text-center">
-            <p className="uppercase tracking-[0.3em] text-xs text-secondary-200">Contact</p>
-            <h1 className="mt-4 text-4xl md:text-5xl font-semibold max-w-3xl mx-auto">
-              Let's Create Beauty Moments Together
-            </h1>
-            <p className="mt-6 max-w-2xl mx-auto text-white/70">
-              Reach out to our concierge team for personalized recommendations, order support, or brand collaborations.
-            </p>
-          </div>
-        </section>
+        <PageHero
+          page="contact"
+          defaultEyebrow="Contact"
+          defaultTitle="Let's Create Beauty Moments Together"
+          defaultDescription="Reach out to our concierge team for personalized recommendations, order support, or brand collaborations."
+        />
 
         <section className="container mx-auto px-4 -mt-12 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">

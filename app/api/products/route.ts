@@ -15,8 +15,9 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '50');
     const page = parseInt(searchParams.get('page') || '1');
     const sort = searchParams.get('sort') || 'createdAt';
+    const showAll = searchParams.get('showAll'); // For admin panel
 
-    const query: any = { isActive: true };
+    const query: any = showAll === 'true' ? {} : { isActive: true };
 
     // Handle multiple categories (comma-separated)
     if (categoryParam) {

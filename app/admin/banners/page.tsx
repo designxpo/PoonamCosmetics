@@ -44,7 +44,7 @@ export default function AdminBanners() {
     
     // Validate image
     if (!formData.image) {
-      toast.error('Please upload an image or provide an image URL');
+      toast.error('Please upload an image');
       return;
     }
     
@@ -261,7 +261,7 @@ export default function AdminBanners() {
                   <div className="w-full h-full flex items-center justify-center text-slate-400">
                     <div className="text-center">
                       <FiImage size={48} className="mx-auto mb-2" />
-                      <p className="text-sm">Add image URL to see preview</p>
+                      <p className="text-sm">Upload an image to see preview</p>
                     </div>
                   </div>
                 )}

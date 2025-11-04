@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FiEdit2, FiTrash2, FiPlus, FiPackage } from 'react-icons/fi';
+import { FiEdit2, FiTrash2, FiPlus, FiPackage, FiCheck } from 'react-icons/fi';
 import toast from 'react-hot-toast';
 
 export default function AdminProductsPage() {
@@ -13,6 +13,9 @@ export default function AdminProductsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [categories, setCategories] = useState<any[]>([]);
+  const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
+  const [bulkAction, setBulkAction] = useState('');
+  const [updatingBulk, setUpdatingBulk] = useState(false);
 
   useEffect(() => {
     fetchProducts();
@@ -21,7 +24,7 @@ export default function AdminProductsPage() {
 
   const fetchProducts = async () => {
     try {
-      const res = await fetch('/api/products?limit=1000');
+      const res = await fetch('/api/products?limit=1000&showAll=true');
       const data = await res.json();
       if (data.success) {
         setProducts(data.products);
@@ -62,6 +65,71 @@ export default function AdminProductsPage() {
       }
     } catch (error) {
       toast.error('Error deleting product');
+    }
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedProducts.length === filteredProducts.length) {
+      setSelectedProducts([]);
+    } else {
+      setSelectedProducts(filteredProducts.map(product => product._id));
+    }
+  };
+
+  const toggleSelectProduct = (productId: string) => {
+    setSelectedProducts(prev =>
+      prev.includes(productId)
+        ? prev.filter(id => id !== productId)
+        : [...prev, productId]
+    );
+  };
+
+  const handleBulkAction = async () => {
+    if (selectedProducts.length === 0) {
+      toast.error('Please select at least one product');
+      return;
+    }
+
+    if (!bulkAction) {
+      toast.error('Please select an action');
+      return;
+    }
+
+    if (bulkAction === 'delete') {
+      if (!confirm(`Are you sure you want to delete ${selectedProducts.length} product(s)?`)) {
+        return;
+      }
+    }
+
+    setUpdatingBulk(true);
+
+    try {
+      const response = await fetch('/api/products/bulk-update', {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          productIds: selectedProducts,
+          action: bulkAction,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.success) {
+        toast.success(`Successfully ${bulkAction === 'delete' ? 'deleted' : 'updated'} ${data.modifiedCount} product(s)`);
+        setSelectedProducts([]);
+        setBulkAction('');
+        fetchProducts();
+      } else {
+        toast.error(data.error || 'Failed to update products');
+      }
+    } catch (error) {
+      console.error('Error updating products:', error);
+      toast.error('Failed to update products');
+    } finally {
+      setUpdatingBulk(false);
     }
   };
 
@@ -122,6 +190,47 @@ export default function AdminProductsPage() {
           </div>
         </div>
 
+        {/* Bulk Actions */}
+        {selectedProducts.length > 0 && (
+          <div className="bg-primary-50 border border-primary-200 rounded-lg p-4">
+            <div className="flex flex-col md:flex-row items-start md:items-center gap-4">
+              <div className="flex items-center gap-2">
+                <FiCheck className="text-primary-600" size={20} />
+                <span className="text-sm font-medium text-primary-900">
+                  {selectedProducts.length} product(s) selected
+                </span>
+              </div>
+              <div className="flex items-center gap-2 flex-1">
+                <select
+                  value={bulkAction}
+                  onChange={(e) => setBulkAction(e.target.value)}
+                  className="px-4 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500"
+                >
+                  <option value="">Select action</option>
+                  <option value="activate">Mark as Active</option>
+                  <option value="deactivate">Mark as Inactive</option>
+                  <option value="feature">Mark as Featured</option>
+                  <option value="unfeature">Remove from Featured</option>
+                  <option value="delete">Delete Products</option>
+                </select>
+                <button
+                  onClick={handleBulkAction}
+                  disabled={!bulkAction || updatingBulk}
+                  className="px-6 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:bg-slate-300 disabled:cursor-not-allowed transition-colors font-medium"
+                >
+                  {updatingBulk ? 'Processing...' : 'Apply'}
+                </button>
+                <button
+                  onClick={() => setSelectedProducts([])}
+                  className="px-4 py-2 text-slate-600 hover:text-slate-900 transition-colors"
+                >
+                  Clear Selection
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Products Table */}
         {filteredProducts.length === 0 ? (
           <div className="bg-white rounded-lg shadow-sm border border-slate-200 p-12 text-center">
@@ -139,6 +248,14 @@ export default function AdminProductsPage() {
               <table className="w-full">
                 <thead className="bg-slate-50">
                   <tr>
+                    <th className="px-6 py-3 text-left">
+                      <input
+                        type="checkbox"
+                        checked={filteredProducts.length > 0 && selectedProducts.length === filteredProducts.length}
+                        onChange={toggleSelectAll}
+                        className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
+                      />
+                    </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Image</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Product</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Category</th>
@@ -151,6 +268,14 @@ export default function AdminProductsPage() {
                 <tbody className="divide-y divide-slate-200">
                   {filteredProducts.map((product) => (
                     <tr key={product._id} className="hover:bg-slate-50">
+                      <td className="px-6 py-4">
+                        <input
+                          type="checkbox"
+                          checked={selectedProducts.includes(product._id)}
+                          onChange={() => toggleSelectProduct(product._id)}
+                          className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
+                        />
+                      </td>
                       <td className="px-6 py-4">
                         <div className="h-16 w-16 relative bg-slate-100 rounded-lg overflow-hidden">
                           {product.images?.[0] ? (

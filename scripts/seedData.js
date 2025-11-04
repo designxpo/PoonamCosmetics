@@ -20,6 +20,7 @@ const productSchema = new mongoose.Schema({
   images: [String],
   stock: Number,
   featured: Boolean,
+  isActive: { type: Boolean, default: true },
 }, { timestamps: true });
 
 const settingsSchema = new mongoose.Schema({

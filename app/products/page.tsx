@@ -6,6 +6,7 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import ScrollingBanner from '@/components/ScrollingBanner';
 import ProductCard from '@/components/ProductCard';
+import PageHero from '@/components/PageHero';
 import Link from 'next/link';
 import { Product, Category } from '@/types';
 import { FiChevronDown, FiChevronUp, FiX } from 'react-icons/fi';
@@ -165,17 +166,12 @@ export default function ProductsPage() {
       <ScrollingBanner />
       <main className="min-h-screen bg-slate-50 pb-20">
         {/* Hero Banner */}
-        <section className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white py-20">
-          <div className="container mx-auto px-4 text-center">
-            <p className="uppercase tracking-[0.3em] text-xs text-secondary-200">Collections</p>
-            <h1 className="mt-4 text-4xl md:text-5xl font-semibold max-w-3xl mx-auto">
-              Explore The Various Collection of Poonam
-            </h1>
-            <p className="mt-6 max-w-2xl mx-auto text-white/70">
-              Discover our curated selection of premium beauty products designed for everyone. Find your perfect match from our extensive collection.
-            </p>
-          </div>
-        </section>
+        <PageHero
+          page="products"
+          defaultEyebrow="Collections"
+          defaultTitle="Explore The Various Collection of Poonam"
+          defaultDescription="Discover our curated selection of premium beauty products designed for everyone. Find your perfect match from our extensive collection."
+        />
 
         {/* Breadcrumb */}
         <div className="bg-white border-b border-slate-200">
