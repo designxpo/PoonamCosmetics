@@ -16,9 +16,11 @@ export default function ProductsPage() {
   const router = useRouter();
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [brands, setBrands] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
+  const [selectedBrand, setSelectedBrand] = useState<string>('');
   const [searchQuery, setSearchQuery] = useState('');
   const [sortBy, setSortBy] = useState('createdAt');
   const [priceRange, setPriceRange] = useState({ min: 0, max: 5000 });
@@ -32,6 +34,7 @@ export default function ProductsPage() {
   // Initialize filters from URL on mount
   useEffect(() => {
     const categoryParam = searchParams.get('category');
+    const brandParam = searchParams.get('brand');
     const searchParam = searchParams.get('search');
     const sortParam = searchParams.get('sort');
     const minPriceParam = searchParams.get('minPrice');
@@ -39,6 +42,9 @@ export default function ProductsPage() {
 
     if (categoryParam) {
       setSelectedCategories(categoryParam.split(','));
+    }
+    if (brandParam) {
+      setSelectedBrand(brandParam);
     }
     if (searchParam) {
       setSearchQuery(searchParam);
@@ -58,6 +64,7 @@ export default function ProductsPage() {
 
   useEffect(() => {
     fetchCategories();
+    fetchBrands();
   }, []);
 
   useEffect(() => {
@@ -65,13 +72,16 @@ export default function ProductsPage() {
       updateURL();
       fetchProducts();
     }
-  }, [selectedCategories, searchQuery, sortBy, priceRange, initialized]);
+  }, [selectedCategories, selectedBrand, searchQuery, sortBy, priceRange, initialized]);
 
   const updateURL = () => {
     const params = new URLSearchParams();
     
     if (selectedCategories.length > 0) {
       params.set('category', selectedCategories.join(','));
+    }
+    if (selectedBrand) {
+      params.set('brand', selectedBrand);
     }
     if (searchQuery) {
       params.set('search', searchQuery);
@@ -103,6 +113,18 @@ export default function ProductsPage() {
     }
   };
 
+  const fetchBrands = async () => {
+    try {
+      const res = await fetch('/api/brands');
+      const data = await res.json();
+      if (data.success) {
+        setBrands(data.brands);
+      }
+    } catch (error) {
+      console.error('Error fetching brands:', error);
+    }
+  };
+
   const fetchProducts = async () => {
     setLoading(true);
     try {
@@ -111,6 +133,11 @@ export default function ProductsPage() {
       // Multiple categories
       if (selectedCategories.length > 0) {
         params.append('category', selectedCategories.join(','));
+      }
+      
+      // Brand filter
+      if (selectedBrand) {
+        params.append('brand', selectedBrand);
       }
       
       // Search query
@@ -149,12 +176,17 @@ export default function ProductsPage() {
     );
   };
 
+  const handleBrandSelect = (brandSlug: string) => {
+    setSelectedBrand(brandSlug === selectedBrand ? '' : brandSlug);
+  };
+
   const toggleSection = (section: keyof typeof expandedSections) => {
     setExpandedSections((prev) => ({ ...prev, [section]: !prev[section] }));
   };
 
   const clearFilters = () => {
     setSelectedCategories([]);
+    setSelectedBrand('');
     setSearchQuery('');
     setSortBy('createdAt');
     setPriceRange({ min: 0, max: 5000 });
@@ -189,6 +221,38 @@ export default function ProductsPage() {
             {/* Sidebar Filters */}
             <aside className="hidden lg:block w-64 flex-shrink-0">
               <div className="sticky top-24">
+                {/* Brand Filter */}
+                <div className="mb-6 pb-6 border-b border-slate-200">
+                  <button
+                    onClick={() => toggleSection('brand')}
+                    className="flex items-center justify-between w-full mb-4 font-semibold text-slate-900"
+                  >
+                    <span>Brand</span>
+                    {expandedSections.brand ? <FiChevronUp /> : <FiChevronDown />}
+                  </button>
+                  {expandedSections.brand && (
+                    <div className="space-y-3">
+                      {brands.map((brand) => (
+                        <label key={brand._id} className="flex items-center gap-3 cursor-pointer group">
+                          <input
+                            type="radio"
+                            name="brand"
+                            checked={selectedBrand === brand.slug}
+                            onChange={() => handleBrandSelect(brand.slug)}
+                            className="w-4 h-4 border-slate-300 text-primary-600 focus:ring-primary-500"
+                          />
+                          <span className="text-sm text-slate-600 group-hover:text-slate-900 flex items-center gap-2">
+                            {brand.logo && (
+                              <img src={brand.logo} alt={brand.name} className="w-6 h-6 object-contain" />
+                            )}
+                            {brand.name}
+                          </span>
+                        </label>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
                 {/* Category Filter */}
                 <div className="mb-6">
                   <button
@@ -314,9 +378,19 @@ export default function ProductsPage() {
               </div>
 
               {/* Active Filters */}
-              {(selectedCategories.length > 0 || priceRange.min > 0 || priceRange.max < 5000) && (
+              {(selectedCategories.length > 0 || selectedBrand || priceRange.min > 0 || priceRange.max < 5000) && (
                 <div className="flex flex-wrap items-center gap-2 mb-6">
                   <span className="text-sm font-medium text-slate-700">Active Filters:</span>
+                  
+                  {selectedBrand && (
+                    <button
+                      onClick={() => setSelectedBrand('')}
+                      className="px-3 py-1 bg-primary-100 text-primary-700 rounded-full text-sm flex items-center gap-2"
+                    >
+                      Brand: {brands.find(b => b.slug === selectedBrand)?.name}
+                      <FiX size={14} />
+                    </button>
+                  )}
                   
                   {selectedCategories.map((categorySlug) => {
                     const category = categories.find(c => c.slug === categorySlug);
@@ -384,6 +458,30 @@ export default function ProductsPage() {
                 <button onClick={() => setSidebarOpen(false)} className="p-2">
                   <FiX size={24} />
                 </button>
+              </div>
+
+              {/* Mobile Brand Filter */}
+              <div className="mb-6 pb-6 border-b border-slate-200">
+                <h3 className="font-semibold text-slate-900 mb-4">Brand</h3>
+                <div className="space-y-3">
+                  {brands.map((brand) => (
+                    <label key={brand._id} className="flex items-center gap-3 cursor-pointer">
+                      <input
+                        type="radio"
+                        name="mobile-brand"
+                        checked={selectedBrand === brand.slug}
+                        onChange={() => handleBrandSelect(brand.slug)}
+                        className="w-4 h-4 border-slate-300 text-primary-600 focus:ring-primary-500"
+                      />
+                      <span className="text-sm text-slate-600 flex items-center gap-2">
+                        {brand.logo && (
+                          <img src={brand.logo} alt={brand.name} className="w-6 h-6 object-contain" />
+                        )}
+                        {brand.name}
+                      </span>
+                    </label>
+                  ))}
+                </div>
               </div>
 
               {/* Mobile Category Filter */}

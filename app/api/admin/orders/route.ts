@@ -7,6 +7,7 @@ export async function GET(request: NextRequest) {
   try {
     // Verify admin authentication
     const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    
     if (!token) {
       return NextResponse.json(
         { success: false, error: 'Unauthorized' },
@@ -15,9 +16,14 @@ export async function GET(request: NextRequest) {
     }
 
     const decoded = verifyToken(token);
-    if (!decoded || decoded.role !== 'admin') {
+    
+    // Handle both old and new token formats
+    const userRole = decoded?.role;
+    const userId = decoded?.userId || decoded?.id;
+    
+    if (!decoded || userRole !== 'admin') {
       return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
+        { success: false, error: 'Unauthorized - Admin access required' },
         { status: 401 }
       );
     }

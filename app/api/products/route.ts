@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Product from '@/models/Product';
+import Brand from '@/models/Brand';
+import Category from '@/models/Category';
 
 export async function GET(request: NextRequest) {
   try {
@@ -8,6 +10,7 @@ export async function GET(request: NextRequest) {
 
     const searchParams = request.nextUrl.searchParams;
     const categoryParam = searchParams.get('category');
+    const brandParam = searchParams.get('brand');
     const search = searchParams.get('search');
     const featured = searchParams.get('featured');
     const minPrice = searchParams.get('minPrice');
@@ -23,7 +26,26 @@ export async function GET(request: NextRequest) {
     if (categoryParam) {
       const categories = categoryParam.split(',').filter(Boolean);
       if (categories.length > 0) {
-        query.category = { $in: categories };
+        // Check if they're ObjectIds or slugs
+        const isObjectId = categories.every(cat => /^[0-9a-fA-F]{24}$/.test(cat));
+        
+        if (!isObjectId) {
+          // Convert slugs to IDs
+          const categoryDocs = await Category.find({ slug: { $in: categories } });
+          const categoryIds = categoryDocs.map(cat => cat._id);
+          query.category = { $in: categoryIds };
+        } else {
+          query.category = { $in: categories };
+        }
+      }
+    }
+
+    // Handle brand filter
+    if (brandParam) {
+      // Resolve brand slug to ID
+      const brand = await Brand.findOne({ slug: brandParam });
+      if (brand) {
+        query.brand = brand._id;
       }
     }
 
@@ -72,6 +94,7 @@ export async function GET(request: NextRequest) {
 
     const products = await Product.find(query)
       .populate('category', 'name slug')
+      .populate('brand', 'name slug logo')
       .sort(sortOption)
       .limit(limit)
       .skip(skip)
@@ -103,7 +126,7 @@ export async function POST(request: NextRequest) {
     await dbConnect();
 
     const body = await request.json();
-    const { name, description, price, category, images, stock, featured, isActive } = body;
+    const { name, description, price, category, brand, images, stock, featured, isActive } = body;
 
     // Generate slug from name
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
@@ -114,6 +137,7 @@ export async function POST(request: NextRequest) {
       description,
       price,
       category,
+      brand: brand || undefined,
       images: images || [],
       stock: stock || 0,
       featured: featured || false,

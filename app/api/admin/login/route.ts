@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
-import Admin from '@/models/Admin';
+import User from '@/models/User';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
@@ -18,8 +18,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Find admin
-    const admin = await Admin.findOne({ email });
+    // Find admin user (user with role 'admin')
+    const admin = await User.findOne({ email, role: 'admin' });
 
     if (!admin) {
       return NextResponse.json(
@@ -40,7 +40,12 @@ export async function POST(request: NextRequest) {
 
     // Generate JWT token
     const token = jwt.sign(
-      { id: admin._id, email: admin.email },
+      { 
+        id: admin._id,
+        userId: admin._id,  // Also include as userId for consistency
+        email: admin.email,
+        role: 'admin'  // Add role field
+      },
       process.env.JWT_SECRET || 'your-secret-key',
       { expiresIn: '7d' }
     );
@@ -52,6 +57,7 @@ export async function POST(request: NextRequest) {
         id: admin._id,
         email: admin.email,
         name: admin.name,
+        role: 'admin',  // Include role in response
       },
     });
   } catch (error: any) {

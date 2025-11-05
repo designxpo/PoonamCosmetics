@@ -24,7 +24,7 @@ export default function FeaturedCollections({ collections }: FeaturedCollections
       title: 'Autumn Skincare',
       subtitle: 'Discover Now →',
       image: 'https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=600&q=80',
-      link: '/products?category=skincare',
+      link: '/category/skincare',
       backgroundColor: 'slate-200',
     },
     {
@@ -32,7 +32,7 @@ export default function FeaturedCollections({ collections }: FeaturedCollections
       title: 'Anti-aging Cream',
       subtitle: 'Buy 1 Get 1 →',
       image: 'https://images.unsplash.com/photo-1556228852-80c3a083d0d5?auto=format&fit=crop&w=600&q=80',
-      link: '/products?category=face-creams',
+      link: '/category/face-creams',
       backgroundColor: 'slate-200',
     },
     {

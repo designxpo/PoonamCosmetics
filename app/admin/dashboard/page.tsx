@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react';
 import AdminLayout from '@/components/admin/AdminLayout';
 import Link from 'next/link';
 import { FiPackage, FiShoppingBag, FiUsers, FiDollarSign, FiTrendingUp } from 'react-icons/fi';
+import { useAuthStore } from '@/store/authStore';
 
 export default function AdminDashboard() {
+  const { token } = useAuthStore();
   const [stats, setStats] = useState({
     totalProducts: 0,
     totalOrders: 0,
@@ -18,14 +20,22 @@ export default function AdminDashboard() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchDashboardData();
-  }, []);
+    if (token) {
+      fetchDashboardData();
+    }
+  }, [token]);
 
   const fetchDashboardData = async () => {
+    if (!token) return;
+
     try {
       const [productsRes, ordersRes] = await Promise.all([
         fetch('/api/products?limit=1000'),
-        fetch('/api/orders'),
+        fetch('/api/admin/orders', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }),
       ]);
 
       const productsData = await productsRes.json();

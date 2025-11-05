@@ -13,6 +13,7 @@ export default function AdminProductsPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [categories, setCategories] = useState<any[]>([]);
+  const [brands, setBrands] = useState<any[]>([]);
   const [selectedProducts, setSelectedProducts] = useState<string[]>([]);
   const [bulkAction, setBulkAction] = useState('');
   const [updatingBulk, setUpdatingBulk] = useState(false);
@@ -20,6 +21,7 @@ export default function AdminProductsPage() {
   useEffect(() => {
     fetchProducts();
     fetchCategories();
+    fetchBrands();
   }, []);
 
   const fetchProducts = async () => {
@@ -46,6 +48,18 @@ export default function AdminProductsPage() {
       }
     } catch (error) {
       console.error('Error fetching categories:', error);
+    }
+  };
+
+  const fetchBrands = async () => {
+    try {
+      const res = await fetch('/api/brands?showAll=true');
+      const data = await res.json();
+      if (data.success) {
+        setBrands(data.brands);
+      }
+    } catch (error) {
+      console.error('Error fetching brands:', error);
     }
   };
 
@@ -259,6 +273,7 @@ export default function AdminProductsPage() {
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Image</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Product</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Category</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Brand</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Price</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Stock</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase">Status</th>
@@ -300,6 +315,9 @@ export default function AdminProductsPage() {
                       </td>
                       <td className="px-6 py-4 text-sm text-slate-600">
                         {product.category?.name || 'Uncategorized'}
+                      </td>
+                      <td className="px-6 py-4 text-sm text-slate-600">
+                        {product.brand?.name || '-'}
                       </td>
                       <td className="px-6 py-4 text-sm font-medium text-slate-900">
                         ₹{product.price?.toLocaleString()}

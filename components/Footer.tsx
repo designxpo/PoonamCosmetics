@@ -1,138 +1,168 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { FaWhatsapp, FaInstagram, FaFacebook, FaTwitter } from 'react-icons/fa';
 
 export default function Footer() {
   return (
-    <footer className="relative mt-24 bg-slate-950 text-white">
-      <div className="absolute inset-x-0 -top-6 mx-auto h-12 max-w-4xl rounded-full bg-gradient-to-r from-primary-500/40 via-secondary-500/40 to-primary-500/40 blur-3xl" />
-      <div className="container mx-auto px-4 py-16 relative z-10">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-4">
+    <footer className="bg-slate-900 text-white mt-20">
+      <div className="container mx-auto px-4 py-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           {/* Brand */}
-          <div className="space-y-6">
-            <h3 className="text-2xl font-semibold tracking-wide">Poonam Cosmetics</h3>
-            <p className="text-white/60 text-sm leading-relaxed">
-              A curated wardrobe of beauty essentials inspired by global fashion houses. Elevate your routine with formulations designed for modern icons.
+          <div className="space-y-4">
+            <Link href="/" className="inline-block">
+              <div className="relative h-10 w-40 mb-4">
+                <Image
+                  src="/images/branding/logo.png"
+                  alt="Poonam Cosmetics"
+                  fill
+                  className="object-contain brightness-0 invert"
+                  priority
+                />
+              </div>
+            </Link>
+            <p className="text-slate-400 text-sm leading-relaxed">
+              Your trusted destination for premium cosmetics and beauty products. Quality products at affordable prices.
             </p>
-            <div className="flex items-center gap-3 text-white/50 text-sm">
-              <span className="h-3 w-3 rounded-full bg-secondary-500" />
-              <span>Made with passion in Mumbai • Est. 2020</span>
+            <div className="flex items-center gap-1 text-slate-400 text-xs">
+              <span className="h-2 w-2 rounded-full bg-amber-400" />
+              <span>Made with ♥ in India</span>
             </div>
           </div>
 
-          {/* Navigation */}
+          {/* Quick Links */}
           <div>
-            <h4 className="text-sm uppercase tracking-[0.3em] text-white/60">Explore</h4>
-            <ul className="mt-5 space-y-3 text-white/80 text-sm">
+            <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Quick Links</h4>
+            <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/products" className="hover:text-secondary-300 transition-colors">
-                  All Products
+                <Link href="/" className="text-slate-400 hover:text-white transition-colors">
+                  Home
                 </Link>
               </li>
               <li>
-                <Link href="/categories" className="hover:text-secondary-300 transition-colors">
-                  Categories
+                <Link href="/products" className="text-slate-400 hover:text-white transition-colors">
+                  Products
                 </Link>
               </li>
               <li>
-                <Link href="/about" className="hover:text-secondary-300 transition-colors">
+                <Link href="/about" className="text-slate-400 hover:text-white transition-colors">
                   About Us
                 </Link>
               </li>
               <li>
-                <Link href="/contact" className="hover:text-secondary-300 transition-colors">
+                <Link href="/contact" className="text-slate-400 hover:text-white transition-colors">
                   Contact
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Support */}
+          {/* Customer Service */}
           <div>
-            <h4 className="text-sm uppercase tracking-[0.3em] text-white/60">Support</h4>
-            <ul className="mt-5 space-y-3 text-white/80 text-sm">
+            <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Customer Service</h4>
+            <ul className="space-y-2 text-sm">
               <li>
-                <Link href="/shipping" className="hover:text-secondary-300 transition-colors">
-                  Shipping & Tracking
+                <Link href="/shipping" className="text-slate-400 hover:text-white transition-colors">
+                  Shipping Policy
                 </Link>
               </li>
               <li>
-                <Link href="/returns" className="hover:text-secondary-300 transition-colors">
+                <Link href="/returns" className="text-slate-400 hover:text-white transition-colors">
                   Returns & Refunds
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="hover:text-secondary-300 transition-colors">
+                <Link href="/privacy" className="text-slate-400 hover:text-white transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="hover:text-secondary-300 transition-colors">
+                <Link href="/terms" className="text-slate-400 hover:text-white transition-colors">
                   Terms & Conditions
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Newsletter */}
-          <div className="space-y-5">
-            <h4 className="text-sm uppercase tracking-[0.3em] text-white/60">Stay in Vogue</h4>
-            <p className="text-white/70 text-sm leading-relaxed">
-              Join our insider list for early access to drops, backstage stories, and exclusive offers tailored for you.
-            </p>
-            <form className="flex flex-col gap-3">
-              <input
-                type="email"
-                placeholder="Enter your email"
-                className="rounded-full border border-white/20 bg-white/10 px-4 py-3 text-sm text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-secondary-400/60"
-              />
-              <button type="submit" className="btn-secondary uppercase tracking-[0.3em] text-xs">
-                Subscribe
-              </button>
-            </form>
-            <div className="flex items-center gap-4 text-xl text-white/70">
-              <a
-                href="https://wa.me/919999999999"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-secondary-300 transition-colors"
-              >
-                <FaWhatsapp />
-              </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-secondary-300 transition-colors"
-              >
-                <FaInstagram />
-              </a>
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-secondary-300 transition-colors"
-              >
-                <FaFacebook />
-              </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-secondary-300 transition-colors"
-              >
-                <FaTwitter />
-              </a>
+          {/* Contact & Social */}
+          <div>
+            <h4 className="text-white font-semibold mb-4 text-sm uppercase tracking-wider">Get In Touch</h4>
+            <div className="space-y-3 text-sm">
+              <p>
+                <span className="block font-medium text-white mb-1">WhatsApp:</span>
+                <a href="https://wa.me/919999999999" className="text-slate-300 hover:text-white transition-colors">
+                  +91 99999 99999
+                </a>
+              </p>
+              <p>
+                <span className="block font-medium text-white mb-1">Email:</span>
+                <a href="mailto:info@poonamcosmetics.com" className="text-slate-300 hover:text-white transition-colors">
+                  info@poonamcosmetics.com
+                </a>
+              </p>
+            </div>
+            
+            {/* Social Icons */}
+            <div className="mt-5">
+              <h5 className="text-white font-medium mb-3 text-sm">Follow Us</h5>
+              <div className="flex items-center gap-3">
+                <a
+                  href="https://wa.me/919999999999"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-full bg-slate-800 hover:bg-green-500 text-white flex items-center justify-center transition-all"
+                  aria-label="WhatsApp"
+                >
+                  <FaWhatsapp size={18} />
+                </a>
+                <a
+                  href="https://instagram.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-full bg-slate-800 hover:bg-pink-500 text-white flex items-center justify-center transition-all"
+                  aria-label="Instagram"
+                >
+                  <FaInstagram size={18} />
+                </a>
+                <a
+                  href="https://facebook.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-full bg-slate-800 hover:bg-blue-500 text-white flex items-center justify-center transition-all"
+                  aria-label="Facebook"
+                >
+                  <FaFacebook size={18} />
+                </a>
+                <a
+                  href="https://twitter.com"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="w-9 h-9 rounded-full bg-slate-800 hover:bg-sky-500 text-white flex items-center justify-center transition-all"
+                  aria-label="Twitter"
+                >
+                  <FaTwitter size={18} />
+                </a>
+              </div>
             </div>
           </div>
         </div>
 
-        <div className="mt-12 flex flex-col gap-4 border-t border-white/10 pt-8 text-center text-xs text-white/50 md:flex-row md:items-center md:justify-between">
-          <p>&copy; {new Date().getFullYear()} Poonam Cosmetics. All rights reserved.</p>
-          <div className="flex justify-center gap-6">
-            <span>WhatsApp: +91 99999 99999</span>
-            <span>Email: info@poonamcosmetics.com</span>
+        {/* Bottom Bar */}
+        <div className="mt-10 pt-6 border-t border-slate-800">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-slate-400">
+            <p>&copy; {new Date().getFullYear()} Poonam Cosmetics. All rights reserved.</p>
+            <div className="flex gap-6 text-xs">
+              <Link href="/privacy" className="hover:text-white transition-colors">
+                Privacy
+              </Link>
+              <Link href="/terms" className="hover:text-white transition-colors">
+                Terms
+              </Link>
+              <Link href="/sitemap" className="hover:text-white transition-colors">
+                Sitemap
+              </Link>
+            </div>
           </div>
         </div>
       </div>

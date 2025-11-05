@@ -49,7 +49,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           
           {/* Sale Badge */}
           {product.featured && (
-            <div className="absolute top-3 left-3 bg-red-500 text-white text-xs font-semibold px-3 py-1 rounded-full">
+            <div className="absolute top-3 left-3 bg-text-primary text-white text-xs font-semibold px-3 py-1 rounded-none">
               SALE
             </div>
           )}
@@ -65,7 +65,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <button
             onClick={handleAddToCart}
             disabled={product.stock === 0}
-            className="absolute bottom-3 left-3 right-3 bg-slate-900 text-white py-2 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-2 text-sm font-medium disabled:bg-slate-400 disabled:cursor-not-allowed"
+            className="absolute bottom-3 left-3 right-3 bg-white text-text-primary border-2 border-text-primary py-2 rounded-none opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-2 text-sm font-medium disabled:bg-secondary-400 disabled:cursor-not-allowed hover:bg-text-primary hover:text-white"
           >
             <FiShoppingCart size={16} />
             <span>Add to Cart</span>
@@ -74,10 +74,27 @@ export default function ProductCard({ product }: ProductCardProps) {
 
         {/* Product Details */}
         <div className="p-4">
-          {/* Category */}
-          <p className="text-xs text-slate-500 mb-1">
-            {typeof product.category === 'object' ? product.category.name : 'Cosmetics'}
-          </p>
+          {/* Category & Brand */}
+          <div className="flex items-center gap-2 mb-1">
+            <p className="text-xs text-slate-500">
+              {typeof product.category === 'object' ? product.category.name : 'Cosmetics'}
+            </p>
+            {product.brand && typeof product.brand === 'object' && (
+              <>
+                <span className="text-slate-300">•</span>
+                <div className="flex items-center gap-1">
+                  {product.brand.logo && (
+                    <img 
+                      src={product.brand.logo} 
+                      alt={product.brand.name} 
+                      className="w-4 h-4 object-contain"
+                    />
+                  )}
+                  <span className="text-xs text-slate-500">{product.brand.name}</span>
+                </div>
+              </>
+            )}
+          </div>
 
           {/* Product Name */}
           <h3 className="text-sm font-medium text-slate-900 mb-2 line-clamp-2 group-hover:text-slate-700">

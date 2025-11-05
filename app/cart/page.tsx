@@ -15,11 +15,6 @@ export default function CartPage() {
   const { items, getTotalPrice, clearCart } = useCartStore();
   const { isAuthenticated, user, token } = useAuthStore();
   const router = useRouter();
-  const [customerInfo, setCustomerInfo] = useState({
-    name: '',
-    phone: '',
-    address: '',
-  });
   const [isCreatingOrder, setIsCreatingOrder] = useState(false);
 
   const deliveryCharge = 50;
@@ -38,9 +33,10 @@ export default function CartPage() {
       return;
     }
 
-    // Validate required information
-    if (!customerInfo.name || !customerInfo.phone || !customerInfo.address) {
-      toast.error('Please fill in your name, phone, and address');
+    // Check if user has required information
+    if (!user?.name || !user?.phone || !user?.address?.street || !user?.address?.city || !user?.address?.state || !user?.address?.pincode) {
+      toast.error('Please complete your delivery address in your account settings');
+      router.push('/account?tab=profile');
       return;
     }
 
@@ -58,31 +54,21 @@ export default function CartPage() {
         })),
         totalAmount: total,
         deliveryAddress: {
-          street: customerInfo.address,
-          city: 'To be confirmed', // Will be confirmed via WhatsApp
-          state: 'India',
-          pincode: '000000'
+          street: user.address?.street || '',
+          city: user.address?.city || '',
+          state: user.address?.state || '',
+          pincode: user.address?.pincode || ''
         },
         paymentMethod: 'cod',
-        status: 'pending'
+        status: 'pending',
+        user: user._id
       };
-
-      // Add user info if authenticated, otherwise guest info
-      if (isAuthenticated && user) {
-        orderData.user = user._id;
-      } else {
-        orderData.guestInfo = {
-          name: customerInfo.name,
-          email: '',
-          phone: customerInfo.phone
-        };
-      }
 
       const response = await fetch('/api/orders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(token && { Authorization: `Bearer ${token}` })
+          Authorization: `Bearer ${token}`
         },
         body: JSON.stringify(orderData)
       });
@@ -99,9 +85,12 @@ export default function CartPage() {
       let message = `*New Order from Poonam Cosmetics*\n\n`;
       message += `*Order Number:* ${order.orderNumber}\n\n`;
       
-      message += `*Customer Name:* ${customerInfo.name}\n`;
-      message += `*Phone:* ${customerInfo.phone}\n`;
-      message += `*Address:* ${customerInfo.address}\n`;
+      message += `*Customer Name:* ${user.name}\n`;
+      message += `*Email:* ${user.email}\n`;
+      message += `*Phone:* ${user.phone}\n`;
+      message += `*Delivery Address:*\n`;
+      message += `${user.address?.street}\n`;
+      message += `${user.address?.city}, ${user.address?.state} - ${user.address?.pincode}\n`;
       message += `\n*Order Details:*\n`;
       
       items.forEach((item, index) => {
@@ -184,48 +173,58 @@ export default function CartPage() {
               <div className="rounded-sm border border-white/60 bg-white/90 backdrop-blur shadow-xl p-8 sticky top-24">
                 <h2 className="text-2xl font-bold mb-6">Order Summary</h2>
 
-                {/* Customer Info Form */}
-                <div className="space-y-4 mb-6">
-                  <div>
-                    <label className="block text-sm font-semibold uppercase tracking-[0.2em] text-slate-500 mb-2">
-                      Name <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={customerInfo.name}
-                      onChange={(e) => setCustomerInfo({ ...customerInfo, name: e.target.value })}
-                      className="w-full rounded-none border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
-                      placeholder="Your name"
-                      required
-                    />
+                {/* User Info Display */}
+                {isAuthenticated && user && (
+                  <div className="space-y-3 mb-6 bg-slate-50 p-4 rounded-sm">
+                    <h3 className="font-semibold text-sm uppercase tracking-[0.2em] text-slate-700 mb-3">
+                      Delivery Information
+                    </h3>
+                    <div className="space-y-2 text-sm">
+                      <div>
+                        <span className="text-slate-500">Name:</span>
+                        <span className="ml-2 text-slate-900 font-medium">{user.name}</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500">Email:</span>
+                        <span className="ml-2 text-slate-900 font-medium">{user.email}</span>
+                      </div>
+                      <div>
+                        <span className="text-slate-500">Phone:</span>
+                        <span className="ml-2 text-slate-900 font-medium">{user.phone || 'Not provided'}</span>
+                      </div>
+                      {user.address && user.address.street && (
+                        <div className="pt-2 border-t border-slate-200">
+                          <span className="text-slate-500 block mb-1">Delivery Address:</span>
+                          <p className="text-slate-900 font-medium leading-relaxed">
+                            {user.address.street}<br />
+                            {user.address.city}, {user.address.state} - {user.address.pincode}
+                          </p>
+                        </div>
+                      )}
+                      {(!user.phone || !user.address?.street || !user.address?.city || !user.address?.state || !user.address?.pincode) && (
+                        <div className="pt-2 border-t border-amber-200 bg-amber-50 -mx-4 -mb-4 mt-3 px-4 py-3">
+                          <p className="text-xs text-amber-800">
+                            ⚠️ Please complete your delivery address in{' '}
+                            <Link href="/account?tab=profile" className="underline font-semibold">
+                              account settings
+                            </Link>
+                          </p>
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <div>
-                    <label className="block text-sm font-semibold uppercase tracking-[0.2em] text-slate-500 mb-2">
-                      Phone <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="tel"
-                      value={customerInfo.phone}
-                      onChange={(e) => setCustomerInfo({ ...customerInfo, phone: e.target.value })}
-                      className="w-full rounded-none border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
-                      placeholder="Your phone number"
-                      required
-                    />
+                )}
+
+                {!isAuthenticated && (
+                  <div className="mb-6 bg-amber-50 p-4 rounded-sm border border-amber-200">
+                    <p className="text-sm text-amber-800 mb-3">
+                      Please login to place an order
+                    </p>
+                    <Link href="/login?redirect=/cart" className="btn-primary text-sm w-full block text-center">
+                      Login / Sign Up
+                    </Link>
                   </div>
-                  <div>
-                    <label className="block text-sm font-semibold uppercase tracking-[0.2em] text-slate-500 mb-2">
-                      Address <span className="text-red-500">*</span>
-                    </label>
-                    <textarea
-                      value={customerInfo.address}
-                      onChange={(e) => setCustomerInfo({ ...customerInfo, address: e.target.value })}
-                      className="w-full rounded-none border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200"
-                      rows={3}
-                      placeholder="Your delivery address"
-                      required
-                    />
-                  </div>
-                </div>
+                )}
 
                 <div className="border-t border-slate-200 pt-4 space-y-3">
                   <div className="flex justify-between text-lg">
@@ -255,7 +254,7 @@ export default function CartPage() {
 
                 <button
                   onClick={handleCheckout}
-                  disabled={isCreatingOrder || !customerInfo.name || !customerInfo.phone || !customerInfo.address}
+                  disabled={isCreatingOrder || !isAuthenticated || !user?.name || !user?.phone || !user?.address?.street || !user?.address?.city || !user?.address?.state || !user?.address?.pincode}
                   className="w-full btn-primary mt-6 flex items-center justify-center space-x-2 text-lg disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   {isCreatingOrder ? (
@@ -271,9 +270,15 @@ export default function CartPage() {
                   )}
                 </button>
 
-                {(!customerInfo.name || !customerInfo.phone || !customerInfo.address) && (
+                {isAuthenticated && (!user?.name || !user?.phone || !user?.address?.street || !user?.address?.city || !user?.address?.state || !user?.address?.pincode) && (
                   <p className="text-sm text-red-600 mt-2 text-center">
-                    Please fill in all required fields
+                    Please complete your delivery address to place orders
+                  </p>
+                )}
+
+                {!isAuthenticated && (
+                  <p className="text-sm text-amber-600 mt-2 text-center">
+                    Please login to place an order
                   </p>
                 )}
 

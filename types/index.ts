@@ -18,9 +18,28 @@ export interface Product {
     name: string;
     slug: string;
   };
+  brand?: {
+    _id: string;
+    name: string;
+    slug: string;
+    logo: string;
+  };
   images: string[];
   stock: number;
   featured: boolean;
+  pdpFeatures?: {
+    showColorSelector?: boolean;
+    availableColors?: string[];
+    showSizeSelector?: boolean;
+    availableSizes?: string[];
+    showReviews?: boolean;
+    showSocialShare?: boolean;
+    showAdditionalInfo?: boolean;
+    customFeatures?: {
+      label: string;
+      value: string;
+    }[];
+  };
   createdAt: string;
   updatedAt: string;
 }

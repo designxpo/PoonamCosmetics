@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Product from '@/models/Product';
+import Brand from '@/models/Brand';
 
 export async function GET(
   request: NextRequest,
@@ -11,6 +12,7 @@ export async function GET(
 
     const product = await Product.findOne({ slug: params.slug })
       .populate('category', 'name slug')
+      .populate('brand', 'name slug logo')
       .lean();
 
     if (!product) {

@@ -5,8 +5,10 @@ import AdminLayout from '@/components/admin/AdminLayout';
 import Link from 'next/link';
 import { FiEye, FiDownload, FiFilter, FiCheck } from 'react-icons/fi';
 import toast from 'react-hot-toast';
+import { useAuthStore } from '@/store/authStore';
 
 export default function AdminOrders() {
+  const { token } = useAuthStore();
   const [orders, setOrders] = useState<any[]>([]);
   const [filteredOrders, setFilteredOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -17,22 +19,36 @@ export default function AdminOrders() {
   const [updatingBulk, setUpdatingBulk] = useState(false);
 
   useEffect(() => {
-    fetchOrders();
-  }, []);
+    if (token) {
+      fetchOrders();
+    }
+  }, [token]);
 
   useEffect(() => {
     filterOrders();
   }, [statusFilter, searchQuery, orders]);
 
   const fetchOrders = async () => {
+    if (!token) {
+      setLoading(false);
+      return;
+    }
+
     try {
-      const response = await fetch('/api/orders');
+      const response = await fetch('/api/admin/orders', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await response.json();
       if (data.success) {
         setOrders(data.orders || []);
+      } else {
+        toast.error(data.error || 'Failed to fetch orders');
       }
     } catch (error) {
       console.error('Error fetching orders:', error);
+      toast.error('Failed to fetch orders');
     } finally {
       setLoading(false);
     }
@@ -83,6 +99,11 @@ export default function AdminOrders() {
       return;
     }
 
+    if (!token) {
+      toast.error('Please login to continue');
+      return;
+    }
+
     setUpdatingBulk(true);
 
     try {
@@ -90,6 +111,7 @@ export default function AdminOrders() {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           orderIds: selectedOrders,
@@ -160,6 +182,8 @@ export default function AdminOrders() {
             <div className="flex-1">
               <input
                 type="text"
+                id="order-search"
+                name="search"
                 placeholder="Search by order number, customer name or email..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -235,6 +259,8 @@ export default function AdminOrders() {
                   <th className="px-6 py-3 text-left">
                     <input
                       type="checkbox"
+                      id="select-all-orders"
+                      name="selectAll"
                       checked={filteredOrders.length > 0 && selectedOrders.length === filteredOrders.length}
                       onChange={toggleSelectAll}
                       className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"
@@ -262,6 +288,8 @@ export default function AdminOrders() {
                       <td className="px-6 py-4">
                         <input
                           type="checkbox"
+                          id={`order-${order._id}`}
+                          name={`order-${order._id}`}
                           checked={selectedOrders.includes(order._id)}
                           onChange={() => toggleSelectOrder(order._id)}
                           className="w-4 h-4 rounded border-slate-300 text-primary-600 focus:ring-primary-500"

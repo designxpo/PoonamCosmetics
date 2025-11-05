@@ -36,10 +36,22 @@ interface Order {
 
 export default function AccountPage() {
   const router = useRouter();
-  const { user, token, logout, isAuthenticated } = useAuthStore();
+  const { user, token, logout, isAuthenticated, updateUser } = useAuthStore();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<'orders' | 'profile'>('orders');
+  const [isEditing, setIsEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [profileData, setProfileData] = useState({
+    name: '',
+    phone: '',
+    address: {
+      street: '',
+      city: '',
+      state: '',
+      pincode: '',
+    },
+  });
 
   useEffect(() => {
     if (!isAuthenticated) {
@@ -47,8 +59,22 @@ export default function AccountPage() {
       return;
     }
 
+    // Initialize profile data from user
+    if (user) {
+      setProfileData({
+        name: user.name || '',
+        phone: user.phone || '',
+        address: {
+          street: user.address?.street || '',
+          city: user.address?.city || '',
+          state: user.address?.state || '',
+          pincode: user.address?.pincode || '',
+        },
+      });
+    }
+
     fetchOrders();
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user]);
 
   const fetchOrders = async () => {
     try {
@@ -73,6 +99,35 @@ export default function AccountPage() {
     logout();
     toast.success('Logged out successfully');
     router.push('/');
+  };
+
+  const handleSaveProfile = async () => {
+    setSaving(true);
+    try {
+      const res = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(profileData),
+      });
+
+      const data = await res.json();
+      
+      if (data.success) {
+        updateUser(data.user);
+        setIsEditing(false);
+        toast.success('Profile updated successfully');
+      } else {
+        toast.error(data.message || 'Failed to update profile');
+      }
+    } catch (error) {
+      console.error('Error updating profile:', error);
+      toast.error('Failed to update profile');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleCancelOrder = async (orderNumber: string) => {
@@ -287,21 +342,219 @@ export default function AccountPage() {
 
               {activeTab === 'profile' && (
                 <div className="rounded-sm border border-white/60 bg-white/90 backdrop-blur shadow-xl p-8">
-                  <h2 className="text-2xl font-bold text-slate-900 mb-6">Profile Information</h2>
+                  <div className="flex justify-between items-center mb-6">
+                    <h2 className="text-2xl font-bold text-slate-900">Profile Information</h2>
+                    {!isEditing ? (
+                      <button
+                        onClick={() => setIsEditing(true)}
+                        className="btn-primary text-sm px-4 py-2"
+                      >
+                        Edit Profile
+                      </button>
+                    ) : (
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => {
+                            setIsEditing(false);
+                            // Reset to original values
+                            if (user) {
+                              setProfileData({
+                                name: user.name || '',
+                                phone: user.phone || '',
+                                address: {
+                                  street: user.address?.street || '',
+                                  city: user.address?.city || '',
+                                  state: user.address?.state || '',
+                                  pincode: user.address?.pincode || '',
+                                },
+                              });
+                            }
+                          }}
+                          className="px-4 py-2 text-sm border border-slate-300 rounded-sm hover:bg-slate-50"
+                          disabled={saving}
+                        >
+                          Cancel
+                        </button>
+                        <button
+                          onClick={handleSaveProfile}
+                          disabled={saving}
+                          className="btn-primary text-sm px-4 py-2 disabled:opacity-50"
+                        >
+                          {saving ? 'Saving...' : 'Save Changes'}
+                        </button>
+                      </div>
+                    )}
+                  </div>
                   
-                  <div className="space-y-4">
+                  <div className="space-y-6">
+                    {/* Name */}
                     <div>
-                      <label className="block text-sm font-semibold text-slate-500 mb-2">Name</label>
-                      <p className="text-lg text-slate-900">{user.name}</p>
+                      <label className="block text-sm font-semibold text-slate-500 mb-2">
+                        Name <span className="text-red-500">*</span>
+                      </label>
+                      {isEditing ? (
+                        <input
+                          type="text"
+                          id="profile-name"
+                          name="name"
+                          value={profileData.name}
+                          onChange={(e) => setProfileData({ ...profileData, name: e.target.value })}
+                          className="w-full px-4 py-2 border border-slate-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          required
+                        />
+                      ) : (
+                        <p className="text-lg text-slate-900">{user.name}</p>
+                      )}
                     </div>
+
+                    {/* Email (Read-only) */}
                     <div>
                       <label className="block text-sm font-semibold text-slate-500 mb-2">Email</label>
                       <p className="text-lg text-slate-900">{user.email}</p>
+                      {isEditing && (
+                        <p className="text-xs text-slate-500 mt-1">Email cannot be changed</p>
+                      )}
                     </div>
-                    {user.phone && (
-                      <div>
-                        <label className="block text-sm font-semibold text-slate-500 mb-2">Phone</label>
-                        <p className="text-lg text-slate-900">{user.phone}</p>
+
+                    {/* Phone */}
+                    <div>
+                      <label className="block text-sm font-semibold text-slate-500 mb-2">
+                        Phone <span className="text-red-500">*</span>
+                      </label>
+                      {isEditing ? (
+                        <input
+                          type="tel"
+                          id="profile-phone"
+                          name="phone"
+                          value={profileData.phone}
+                          onChange={(e) => setProfileData({ ...profileData, phone: e.target.value })}
+                          className="w-full px-4 py-2 border border-slate-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          placeholder="+91 XXXXX XXXXX"
+                          required
+                        />
+                      ) : (
+                        <p className="text-lg text-slate-900">{user.phone || 'Not provided'}</p>
+                      )}
+                    </div>
+
+                    {/* Address Section */}
+                    <div className="border-t border-slate-200 pt-6">
+                      <h3 className="text-lg font-semibold text-slate-900 mb-4">Delivery Address</h3>
+                      
+                      <div className="space-y-4">
+                        {/* Street */}
+                        <div>
+                          <label className="block text-sm font-semibold text-slate-500 mb-2">
+                            Street / House No. <span className="text-red-500">*</span>
+                          </label>
+                          {isEditing ? (
+                            <textarea
+                              id="profile-street"
+                              name="street"
+                              value={profileData.address.street}
+                              onChange={(e) => setProfileData({
+                                ...profileData,
+                                address: { ...profileData.address, street: e.target.value }
+                              })}
+                              className="w-full px-4 py-2 border border-slate-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                              rows={2}
+                              placeholder="House no., Street name, Area"
+                              required
+                            />
+                          ) : (
+                            <p className="text-lg text-slate-900">
+                              {user.address?.street || 'Not provided'}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* City & State */}
+                        <div className="grid grid-cols-2 gap-4">
+                          <div>
+                            <label className="block text-sm font-semibold text-slate-500 mb-2">
+                              City <span className="text-red-500">*</span>
+                            </label>
+                            {isEditing ? (
+                              <input
+                                type="text"
+                                id="profile-city"
+                                name="city"
+                                value={profileData.address.city}
+                                onChange={(e) => setProfileData({
+                                  ...profileData,
+                                  address: { ...profileData.address, city: e.target.value }
+                                })}
+                                className="w-full px-4 py-2 border border-slate-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                placeholder="City"
+                                required
+                              />
+                            ) : (
+                              <p className="text-lg text-slate-900">
+                                {user.address?.city || 'Not provided'}
+                              </p>
+                            )}
+                          </div>
+
+                          <div>
+                            <label className="block text-sm font-semibold text-slate-500 mb-2">
+                              State <span className="text-red-500">*</span>
+                            </label>
+                            {isEditing ? (
+                              <input
+                                type="text"
+                                id="profile-state"
+                                name="state"
+                                value={profileData.address.state}
+                                onChange={(e) => setProfileData({
+                                  ...profileData,
+                                  address: { ...profileData.address, state: e.target.value }
+                                })}
+                                className="w-full px-4 py-2 border border-slate-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                                placeholder="State"
+                                required
+                              />
+                            ) : (
+                              <p className="text-lg text-slate-900">
+                                {user.address?.state || 'Not provided'}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Pincode */}
+                        <div>
+                          <label className="block text-sm font-semibold text-slate-500 mb-2">
+                            Pincode <span className="text-red-500">*</span>
+                          </label>
+                          {isEditing ? (
+                            <input
+                              type="text"
+                              id="profile-pincode"
+                              name="pincode"
+                              value={profileData.address.pincode}
+                              onChange={(e) => setProfileData({
+                                ...profileData,
+                                address: { ...profileData.address, pincode: e.target.value }
+                              })}
+                              className="w-full px-4 py-2 border border-slate-300 rounded-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
+                              placeholder="6-digit pincode"
+                              maxLength={6}
+                              required
+                            />
+                          ) : (
+                            <p className="text-lg text-slate-900">
+                              {user.address?.pincode || 'Not provided'}
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    {!user.phone || !user.address?.street && (
+                      <div className="bg-amber-50 border border-amber-200 rounded-sm p-4">
+                        <p className="text-sm text-amber-800">
+                          ⚠️ Please complete your profile information to place orders
+                        </p>
                       </div>
                     )}
                   </div>

@@ -16,20 +16,34 @@ export default function EditProductPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [categories, setCategories] = useState<any[]>([]);
+  const [brands, setBrands] = useState<any[]>([]);
   
   const [formData, setFormData] = useState({
     name: '',
     description: '',
     price: '',
     category: '',
+    brand: '',
     stock: '',
     featured: false,
     isActive: true,
     images: [] as string[],
+    // PDP Features
+    pdpFeatures: {
+      showColorSelector: false,
+      availableColors: [] as string[],
+      showSizeSelector: false,
+      availableSizes: [] as string[],
+      showReviews: true,
+      showSocialShare: true,
+      showAdditionalInfo: true,
+      customFeatures: [] as { label: string; value: string }[],
+    },
   });
 
   useEffect(() => {
     fetchCategories();
+    fetchBrands();
     fetchProduct();
   }, [slug]);
 
@@ -45,10 +59,21 @@ export default function EditProductPage() {
           description: product.description || '',
           price: product.price?.toString() || '',
           category: product.category?._id || product.category || '',
+          brand: product.brand?._id || product.brand || '',
           stock: product.stock?.toString() || '0',
           featured: product.featured || false,
           isActive: product.isActive !== undefined ? product.isActive : true,
           images: product.images || [],
+          pdpFeatures: {
+            showColorSelector: product.pdpFeatures?.showColorSelector || false,
+            availableColors: product.pdpFeatures?.availableColors || [],
+            showSizeSelector: product.pdpFeatures?.showSizeSelector || false,
+            availableSizes: product.pdpFeatures?.availableSizes || [],
+            showReviews: product.pdpFeatures?.showReviews !== undefined ? product.pdpFeatures.showReviews : true,
+            showSocialShare: product.pdpFeatures?.showSocialShare !== undefined ? product.pdpFeatures.showSocialShare : true,
+            showAdditionalInfo: product.pdpFeatures?.showAdditionalInfo !== undefined ? product.pdpFeatures.showAdditionalInfo : true,
+            customFeatures: product.pdpFeatures?.customFeatures || [],
+          },
         });
       } else {
         toast.error('Product not found');
@@ -73,6 +98,18 @@ export default function EditProductPage() {
     } catch (error) {
       console.error('Error fetching categories:', error);
       toast.error('Failed to load categories');
+    }
+  };
+
+  const fetchBrands = async () => {
+    try {
+      const res = await fetch('/api/brands?showAll=true');
+      const data = await res.json();
+      if (data.success) {
+        setBrands(data.brands);
+      }
+    } catch (error) {
+      console.error('Error fetching brands:', error);
     }
   };
 
@@ -129,6 +166,7 @@ export default function EditProductPage() {
           description: formData.description,
           price: parseFloat(formData.price),
           category: formData.category,
+          brand: formData.brand || undefined,
           stock: parseInt(formData.stock) || 0,
           featured: formData.featured,
           isActive: formData.isActive,
@@ -275,6 +313,27 @@ export default function EditProductPage() {
             </select>
           </div>
 
+          {/* Brand */}
+          <div>
+            <label htmlFor="brand" className="block text-sm font-medium text-slate-700 mb-2">
+              Brand (Optional)
+            </label>
+            <select
+              id="brand"
+              name="brand"
+              value={formData.brand}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border border-slate-300 rounded-sm focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+            >
+              <option value="">No Brand</option>
+              {brands.map((brand) => (
+                <option key={brand._id} value={brand._id}>
+                  {brand.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
           {/* Product Images */}
           <div>
             <label className="block text-sm font-medium text-slate-700 mb-2">
@@ -313,6 +372,236 @@ export default function EditProductPage() {
                     </div>
                   ))}
                 </div>
+              )}
+            </div>
+          </div>
+
+          {/* PDP Features Section */}
+          <div className="border-t border-slate-200 pt-6 space-y-6">
+            <h3 className="text-lg font-semibold text-slate-900">Product Page Features</h3>
+            
+            {/* Color Selector */}
+            <div className="space-y-3">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.pdpFeatures.showColorSelector}
+                  onChange={(e) => setFormData(prev => ({
+                    ...prev,
+                    pdpFeatures: {
+                      ...prev.pdpFeatures,
+                      showColorSelector: e.target.checked,
+                    }
+                  }))}
+                  className="w-4 h-4 text-primary-600 border-slate-300 rounded focus:ring-primary-500"
+                />
+                <span className="text-sm font-medium text-slate-700">Show Color Selector</span>
+              </label>
+              
+              {formData.pdpFeatures.showColorSelector && (
+                <div>
+                  <label className="block text-sm text-slate-600 mb-2">Available Colors (select multiple)</label>
+                  <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
+                    {['Red', 'Pink', 'Purple', 'Orange', 'Brown', 'Black', 'White', 'Blue', 'Green', 'Yellow'].map(color => (
+                      <label key={color} className="flex items-center gap-2 cursor-pointer text-sm">
+                        <input
+                          type="checkbox"
+                          checked={formData.pdpFeatures.availableColors.includes(color)}
+                          onChange={(e) => {
+                            setFormData(prev => ({
+                              ...prev,
+                              pdpFeatures: {
+                                ...prev.pdpFeatures,
+                                availableColors: e.target.checked
+                                  ? [...prev.pdpFeatures.availableColors, color]
+                                  : prev.pdpFeatures.availableColors.filter(c => c !== color)
+                              }
+                            }));
+                          }}
+                          className="w-3 h-3"
+                        />
+                        <span>{color}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* Size Selector */}
+            <div className="space-y-3">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.pdpFeatures.showSizeSelector}
+                  onChange={(e) => setFormData(prev => ({
+                    ...prev,
+                    pdpFeatures: {
+                      ...prev.pdpFeatures,
+                      showSizeSelector: e.target.checked,
+                    }
+                  }))}
+                  className="w-4 h-4 text-primary-600 border-slate-300 rounded focus:ring-primary-500"
+                />
+                <span className="text-sm font-medium text-slate-700">Show Size Selector</span>
+              </label>
+              
+              {formData.pdpFeatures.showSizeSelector && (
+                <div>
+                  <label className="block text-sm text-slate-600 mb-2">
+                    Available Sizes (comma-separated, e.g., S, M, L or 15ml, 30ml, 50ml)
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.pdpFeatures.availableSizes.join(', ')}
+                    onChange={(e) => {
+                      const sizes = e.target.value.split(',').map(s => s.trim()).filter(s => s);
+                      setFormData(prev => ({
+                        ...prev,
+                        pdpFeatures: {
+                          ...prev.pdpFeatures,
+                          availableSizes: sizes
+                        }
+                      }));
+                    }}
+                    className="w-full px-4 py-2 border border-slate-300 rounded-sm focus:ring-2 focus:ring-primary-500"
+                    placeholder="e.g., S, M, L, XL or 15ml, 30ml, 50ml"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Other Options */}
+            <div className="space-y-2">
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.pdpFeatures.showReviews}
+                  onChange={(e) => setFormData(prev => ({
+                    ...prev,
+                    pdpFeatures: {
+                      ...prev.pdpFeatures,
+                      showReviews: e.target.checked,
+                    }
+                  }))}
+                  className="w-4 h-4 text-primary-600 border-slate-300 rounded focus:ring-primary-500"
+                />
+                <span className="text-sm font-medium text-slate-700">Show Reviews Section</span>
+              </label>
+              
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.pdpFeatures.showSocialShare}
+                  onChange={(e) => setFormData(prev => ({
+                    ...prev,
+                    pdpFeatures: {
+                      ...prev.pdpFeatures,
+                      showSocialShare: e.target.checked,
+                    }
+                  }))}
+                  className="w-4 h-4 text-primary-600 border-slate-300 rounded focus:ring-primary-500"
+                />
+                <span className="text-sm font-medium text-slate-700">Show Social Sharing Buttons</span>
+              </label>
+              
+              <label className="flex items-center gap-2 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={formData.pdpFeatures.showAdditionalInfo}
+                  onChange={(e) => setFormData(prev => ({
+                    ...prev,
+                    pdpFeatures: {
+                      ...prev.pdpFeatures,
+                      showAdditionalInfo: e.target.checked,
+                    }
+                  }))}
+                  className="w-4 h-4 text-primary-600 border-slate-300 rounded focus:ring-primary-500"
+                />
+                <span className="text-sm font-medium text-slate-700">Show Additional Information Tab</span>
+              </label>
+            </div>
+
+            {/* Custom Features */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <label className="text-sm font-medium text-slate-700">Custom Product Features</label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormData(prev => ({
+                      ...prev,
+                      pdpFeatures: {
+                        ...prev.pdpFeatures,
+                        customFeatures: [...prev.pdpFeatures.customFeatures, { label: '', value: '' }]
+                      }
+                    }));
+                  }}
+                  className="text-sm text-primary-600 hover:text-primary-700 flex items-center gap-1"
+                >
+                  <FiPlus size={16} />
+                  Add Feature
+                </button>
+              </div>
+              
+              {formData.pdpFeatures.customFeatures.map((feature, index) => (
+                <div key={index} className="flex gap-2">
+                  <input
+                    type="text"
+                    value={feature.label}
+                    onChange={(e) => {
+                      const newFeatures = [...formData.pdpFeatures.customFeatures];
+                      newFeatures[index].label = e.target.value;
+                      setFormData(prev => ({
+                        ...prev,
+                        pdpFeatures: {
+                          ...prev.pdpFeatures,
+                          customFeatures: newFeatures
+                        }
+                      }));
+                    }}
+                    className="flex-1 px-3 py-2 border border-slate-300 rounded-sm text-sm"
+                    placeholder="Label (e.g., Material)"
+                  />
+                  <input
+                    type="text"
+                    value={feature.value}
+                    onChange={(e) => {
+                      const newFeatures = [...formData.pdpFeatures.customFeatures];
+                      newFeatures[index].value = e.target.value;
+                      setFormData(prev => ({
+                        ...prev,
+                        pdpFeatures: {
+                          ...prev.pdpFeatures,
+                          customFeatures: newFeatures
+                        }
+                      }));
+                    }}
+                    className="flex-1 px-3 py-2 border border-slate-300 rounded-sm text-sm"
+                    placeholder="Value (e.g., 100% Cotton)"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFormData(prev => ({
+                        ...prev,
+                        pdpFeatures: {
+                          ...prev.pdpFeatures,
+                          customFeatures: prev.pdpFeatures.customFeatures.filter((_, i) => i !== index)
+                        }
+                      }));
+                    }}
+                    className="p-2 text-red-500 hover:bg-red-50 rounded-sm"
+                  >
+                    <FiX size={18} />
+                  </button>
+                </div>
+              ))}
+              
+              {formData.pdpFeatures.customFeatures.length === 0 && (
+                <p className="text-sm text-slate-500">
+                  Add custom features like Material, Weight, Ingredients, etc.
+                </p>
               )}
             </div>
           </div>

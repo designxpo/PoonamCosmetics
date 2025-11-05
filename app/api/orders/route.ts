@@ -1,20 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import Order from '@/models/Order';
-import jwt from 'jsonwebtoken';
+import { verifyToken } from '@/lib/auth';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key-change-in-production';
-
-// Helper function to verify token
-function verifyToken(request: NextRequest) {
-  const token = request.headers.get('authorization')?.replace('Bearer ', '');
-  if (!token) return null;
-  
-  try {
-    return jwt.verify(token, JWT_SECRET) as { userId: string; email: string; role: string };
-  } catch {
-    return null;
+// Helper function to get token from request
+function getTokenFromRequest(request: NextRequest) {
+  // Try Authorization header first
+  const authHeader = request.headers.get('authorization');
+  if (authHeader?.startsWith('Bearer ')) {
+    return authHeader.replace('Bearer ', '');
   }
+  
+  // Try cookie as fallback
+  const cookie = request.cookies.get('token');
+  return cookie?.value || null;
 }
 
 // GET - Fetch orders
@@ -22,7 +21,8 @@ export async function GET(request: NextRequest) {
   try {
     await dbConnect();
 
-    const userInfo = verifyToken(request);
+    const token = getTokenFromRequest(request);
+    const userInfo = token ? verifyToken(token) : null;
     const { searchParams } = new URL(request.url);
     const orderNumber = searchParams.get('orderNumber');
 
@@ -73,7 +73,8 @@ export async function POST(request: NextRequest) {
   try {
     await dbConnect();
 
-    const userInfo = verifyToken(request);
+    const token = getTokenFromRequest(request);
+    const userInfo = token ? verifyToken(token) : null;
     const orderData = await request.json();
 
     const {

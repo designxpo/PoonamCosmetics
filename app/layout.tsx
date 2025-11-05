@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
-import { Inter, Poppins } from "next/font/google";
+import { Playfair_Display, Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 
-const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const playfairDisplay = Playfair_Display({ 
+  subsets: ["latin"], 
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-playfair"
+});
+
 const poppins = Poppins({ 
   subsets: ["latin"], 
   weight: ["300", "400", "500", "600", "700"],
@@ -26,7 +31,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${inter.variable} ${poppins.variable} font-sans antialiased`}>
+      <body className={`${playfairDisplay.variable} ${poppins.variable} font-sans antialiased`}>
         {children}
         <Toaster position="top-right" />
       </body>
