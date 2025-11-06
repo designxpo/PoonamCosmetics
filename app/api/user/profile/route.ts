@@ -3,6 +3,8 @@ import dbConnect from '@/lib/mongodb';
 import User from '@/models/User';
 import { verifyToken } from '../../../../lib/auth';
 
+export const dynamic = 'force-dynamic';
+
 // GET - Get user profile
 export async function GET(request: NextRequest) {
   try {
