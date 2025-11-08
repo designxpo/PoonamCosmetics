@@ -1,15 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { v2 as cloudinary } from 'cloudinary';
 
-// Configure Cloudinary
-cloudinary.config({
-  cloud_name: process.env.CLOUDINARY_CLOUD_NAME || 'demo',
-  api_key: process.env.CLOUDINARY_API_KEY || 'demo',
-  api_secret: process.env.CLOUDINARY_API_SECRET || 'demo',
-});
-
 export async function POST(request: NextRequest) {
   try {
+    // Check if Cloudinary is configured
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+    const apiKey = process.env.CLOUDINARY_API_KEY;
+    const apiSecret = process.env.CLOUDINARY_API_SECRET;
+
+    if (!cloudName || !apiKey || !apiSecret) {
+      console.error('Cloudinary configuration missing:', {
+        cloudName: !!cloudName,
+        apiKey: !!apiKey,
+        apiSecret: !!apiSecret,
+      });
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Cloudinary is not configured. Please add CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, and CLOUDINARY_API_SECRET to environment variables.' 
+        },
+        { status: 500 }
+      );
+    }
+
+    // Configure Cloudinary
+    cloudinary.config({
+      cloud_name: cloudName,
+      api_key: apiKey,
+      api_secret: apiSecret,
+    });
+
     const formData = await request.formData();
     const file = formData.get('file') as File;
 
@@ -57,8 +77,24 @@ export async function POST(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('Error uploading file:', error);
+    
+    // Provide more detailed error messages
+    let errorMessage = 'Failed to upload file';
+    
+    if (error.message) {
+      errorMessage += `: ${error.message}`;
+    }
+    
+    if (error.http_code === 401) {
+      errorMessage = 'Cloudinary authentication failed. Please check your API credentials.';
+    }
+    
     return NextResponse.json(
-      { success: false, error: error.message || 'Failed to upload file' },
+      { 
+        success: false, 
+        error: errorMessage,
+        details: process.env.NODE_ENV === 'development' ? error.message : undefined
+      },
       { status: 500 }
     );
   }
