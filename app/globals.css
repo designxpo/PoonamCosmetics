@@ -3,19 +3,19 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 15, 23, 42; /* Slate-900 */
+  --foreground-rgb: 0, 0, 0; /* Black */
   --background-start-rgb: 255, 255, 255;
-  --background-end-rgb: 248, 250, 252; /* Slight gradient to slate-50 */
-  --primary-color: #7C3AED; /* Purple-600 */
-  --primary-hover: #6D28D9; /* Purple-700 */
-  --secondary-color: #F8FAFC; /* Slate-50 */
-  --accent-color: #EC4899; /* Pink-500 */
-  --cream-tint: #FEF3F2; /* Warm white */
+  --background-end-rgb: 255, 255, 255; /* Pure white */
+  --primary-color: #000000; /* Black */
+  --primary-hover: #1a1a1a; /* Dark gray */
+  --secondary-color: #FFFFFF; /* White */
+  --accent-color: #000000; /* Black */
+  --cream-tint: #FFFFFF; /* White */
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom, rgb(var(--background-start-rgb)), rgb(var(--background-end-rgb)));
+  background: rgb(var(--background-start-rgb));
   font-family: var(--font-poppins), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -27,7 +27,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.025em;
-  color: #0F172A; /* Slate-900 */
+  color: #000000; /* Black */
 }
 
 h1 {
@@ -74,13 +74,13 @@ nav a {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #7C3AED, #6D28D9); /* Purple gradient */
+  background: #000000; /* Black */
   border-radius: 10px;
   border: 2px solid #F1F5F9;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(180deg, #6D28D9, #5B21B6); /* Darker purple */
+  background: #1a1a1a; /* Dark gray */
 }
 
 /* Modern animations */
@@ -147,14 +147,14 @@ nav a {
 @layer components {
   /* Modern Primary Button */
   .btn-primary {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    background: #000000;
     color: #FFFFFF;
     padding: 0.875rem 2rem;
     border-radius: 12px;
     font-weight: 600;
     font-size: 0.9375rem;
-    box-shadow: 0 4px 14px -2px rgba(124, 58, 237, 0.4),
-                0 2px 8px -2px rgba(124, 58, 237, 0.2);
+    box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.4),
+                0 2px 8px -2px rgba(0, 0, 0, 0.2);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: none;
     cursor: pointer;
@@ -179,24 +179,25 @@ nav a {
   
   .btn-primary:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px -4px rgba(124, 58, 237, 0.5),
-                0 4px 12px -2px rgba(124, 58, 237, 0.3);
+    background: #1a1a1a;
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5),
+                0 4px 12px -2px rgba(0, 0, 0, 0.3);
   }
   
   .btn-primary:active {
     transform: translateY(0);
   }
 
-  /* Modern Secondary Button (Pink/Accent) */
+  /* Modern Secondary Button */
   .btn-gold {
-    background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);
+    background: #000000;
     color: #FFFFFF;
     padding: 0.875rem 2rem;
     border-radius: 12px;
     font-weight: 600;
     font-size: 0.9375rem;
-    box-shadow: 0 4px 14px -2px rgba(236, 72, 153, 0.4),
-                0 2px 8px -2px rgba(236, 72, 153, 0.2);
+    box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.4),
+                0 2px 8px -2px rgba(0, 0, 0, 0.2);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: none;
     cursor: pointer;
@@ -204,8 +205,9 @@ nav a {
   
   .btn-gold:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 24px -4px rgba(236, 72, 153, 0.5),
-                0 4px 12px -2px rgba(236, 72, 153, 0.3);
+    background: #1a1a1a;
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5),
+                0 4px 12px -2px rgba(0, 0, 0, 0.3);
   }
 
   .btn-secondary {
@@ -229,8 +231,8 @@ nav a {
   }
 
   .btn-outline {
-    border: 2px solid #7C3AED;
-    color: #7C3AED;
+    border: 2px solid #000000;
+    color: #000000;
     background-color: transparent;
     padding: 0.875rem 2rem;
     border-radius: 12px;
@@ -241,28 +243,27 @@ nav a {
   }
   
   .btn-outline:hover {
-    background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%);
+    background: #000000;
     color: #FFFFFF;
-    border-color: #7C3AED;
+    border-color: #000000;
     transform: translateY(-2px);
-    box-shadow: 0 4px 14px -2px rgba(124, 58, 237, 0.3);
+    box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.3);
   }
 
   /* Modern Card Style */
   .custom-card {
-    background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
+    background: #FFFFFF;
     border-radius: 16px;
     border: 1px solid #E2E8F0;
     padding: 1.5rem;
     box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.08),
                 0 2px 8px -2px rgba(0, 0, 0, 0.04);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    backdrop-filter: blur(10px);
   }
   
   .custom-card:hover {
-    box-shadow: 0 12px 32px -8px rgba(124, 58, 237, 0.15),
-                0 8px 20px -4px rgba(124, 58, 237, 0.08);
+    box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.15),
+                0 8px 20px -4px rgba(0, 0, 0, 0.08);
     transform: translateY(-4px);
     border-color: #CBD5E1;
   }
@@ -280,8 +281,8 @@ nav a {
   }
   
   .input-field:focus {
-    border-color: #7C3AED;
-    box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.1);
+    border-color: #000000;
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
     background: #FEFEFE;
   }
   
@@ -301,27 +302,27 @@ nav a {
   }
 
   .badge-success {
-    background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+    background: #10B981;
     color: #FFFFFF;
     box-shadow: 0 2px 8px -2px rgba(16, 185, 129, 0.4);
   }
 
   .badge-warning {
-    background: linear-gradient(135deg, #F59E0B 0%, #D97706 100%);
+    background: #F59E0B;
     color: #FFFFFF;
     box-shadow: 0 2px 8px -2px rgba(245, 158, 11, 0.4);
   }
 
   .badge-danger {
-    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
+    background: #EF4444;
     color: #FFFFFF;
     box-shadow: 0 2px 8px -2px rgba(239, 68, 68, 0.4);
   }
   
   .badge-sale {
-    background: linear-gradient(135deg, #EC4899 0%, #DB2777 100%);
+    background: #000000;
     color: #FFFFFF;
-    box-shadow: 0 2px 8px -2px rgba(236, 72, 153, 0.4);
+    box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.4);
   }
 }
 
@@ -333,7 +334,7 @@ a, .menu-text {
 }
 
 a:hover, .menu-text:hover {
-  color: #7C3AED;
+  color: #000000;
 }
 
 a::after {
@@ -343,7 +344,7 @@ a::after {
   height: 2px;
   bottom: -2px;
   left: 0;
-  background: linear-gradient(90deg, #7C3AED, #EC4899);
+  background: #000000;
   transition: width 0.3s ease-in-out;
 }
 

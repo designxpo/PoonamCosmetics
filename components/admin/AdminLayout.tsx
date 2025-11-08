@@ -70,9 +70,9 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/30 to-pink-50/30">
+    <div className="min-h-screen bg-slate-50">
       {/* Top Bar */}
-      <header className="bg-white/95 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+      <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-4">
             <button
@@ -91,7 +91,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   priority
                 />
               </div>
-              <span className="text-xl font-bold text-primary-500 hidden sm:inline">Admin</span>
+              <span className="text-xl font-bold text-black hidden sm:inline">Admin</span>
             </Link>
           </div>
           <div className="flex items-center gap-4">
@@ -119,7 +119,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
       <div className="flex">
         {/* Sidebar */}
         <aside
-          className={`fixed lg:sticky top-[57px] left-0 h-[calc(100vh-57px)] w-64 bg-white/95 backdrop-blur-md border-r border-slate-200 transform transition-transform duration-200 ease-in-out z-30 shadow-xl ${
+          className={`fixed lg:sticky top-[57px] left-0 h-[calc(100vh-57px)] w-64 bg-white border-r border-slate-200 transform transition-transform duration-200 ease-in-out z-30 shadow-xl ${
             sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
           }`}
         >
@@ -149,8 +149,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   className={`
                     flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 relative group
                     ${isActive 
-                      ? 'bg-primary-500 text-white shadow-md shadow-primary-500/30' 
-                      : 'text-text-primary hover:bg-contrast-50 hover:text-primary-500'
+                      ? 'bg-black text-white shadow-md' 
+                      : 'text-text-primary hover:bg-slate-100 hover:text-black'
                     }
                   `}
                 >
@@ -164,7 +164,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   
                   {/* Hover effect */}
                   {!isActive && (
-                    <div className="absolute inset-0 bg-primary-500/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                    <div className="absolute inset-0 bg-slate-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
                   )}
                 </Link>
               );

@@ -219,13 +219,13 @@ export default function Header() {
       </div>
 
       {/* Second Nav - Menu Items */}
-      <div className="hidden md:block bg-gradient-to-r from-purple-50 via-pink-50 to-purple-50">
+      <div className="hidden md:block bg-white border-b border-slate-200">
         <div className="container mx-auto px-4">
           <nav className="flex items-center justify-center">
             <ul className="flex items-center space-x-6 md:space-x-8 lg:space-x-12 text-slate-700 py-4 text-sm md:text-[15px] tracking-wide">
               {navigationItems.map((item) => (
                 <li key={item._id}>
-                  <Link href={item.href} className="font-medium transition-all hover:text-purple-600 hover:scale-105 inline-block">
+                  <Link href={item.href} className="font-medium transition-all hover:text-black hover:scale-105 inline-block">
                     {item.label}
                   </Link>
                 </li>
