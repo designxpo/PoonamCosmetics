@@ -8,7 +8,9 @@ export interface IBanner extends mongoose.Document {
   ctaText?: string;
   ctaLink?: string;
   textPosition: 'left' | 'center' | 'right';
-  textColor: 'light' | 'dark';
+  textColor: string;
+  buttonColor: string;
+  buttonTextColor: string;
   overlay: boolean;
   isActive: boolean;
   order: number;
@@ -50,8 +52,15 @@ const bannerSchema = new mongoose.Schema<IBanner>(
     },
     textColor: {
       type: String,
-      enum: ['light', 'dark'],
-      default: 'light',
+      default: '#ffffff',
+    },
+    buttonColor: {
+      type: String,
+      default: '#7C3AED',
+    },
+    buttonTextColor: {
+      type: String,
+      default: '#ffffff',
     },
     overlay: {
       type: Boolean,

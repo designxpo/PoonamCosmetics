@@ -16,6 +16,9 @@ export default function AdminBanners() {
     image: '',
     ctaText: '',
     ctaLink: '',
+    textColor: '#ffffff',
+    buttonColor: '#7C3AED',
+    buttonTextColor: '#ffffff',
     order: 0,
     isActive: true,
   });
@@ -79,6 +82,9 @@ export default function AdminBanners() {
       image: banner.image,
       ctaText: banner.ctaText || '',
       ctaLink: banner.ctaLink || '',
+      textColor: banner.textColor || '#ffffff',
+      buttonColor: banner.buttonColor || '#7C3AED',
+      buttonTextColor: banner.buttonTextColor || '#ffffff',
       order: banner.order,
       isActive: banner.isActive,
     });
@@ -114,6 +120,9 @@ export default function AdminBanners() {
       image: '',
       ctaText: '',
       ctaLink: '',
+      textColor: '#ffffff',
+      buttonColor: '#7C3AED',
+      buttonTextColor: '#ffffff',
       order: 0,
       isActive: true,
     });
@@ -210,6 +219,67 @@ export default function AdminBanners() {
                 </div>
               </div>
 
+              {/* Color Customization */}
+              <div className="border-t pt-4">
+                <h3 className="text-sm font-semibold text-slate-900 mb-3">Color Customization</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">Text Color</label>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="color"
+                        value={formData.textColor}
+                        onChange={(e) => setFormData({ ...formData, textColor: e.target.value })}
+                        className="w-12 h-10 rounded border border-slate-300 cursor-pointer"
+                      />
+                      <input
+                        type="text"
+                        value={formData.textColor}
+                        onChange={(e) => setFormData({ ...formData, textColor: e.target.value })}
+                        className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 font-mono text-sm"
+                        placeholder="#ffffff"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">Button Background</label>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="color"
+                        value={formData.buttonColor}
+                        onChange={(e) => setFormData({ ...formData, buttonColor: e.target.value })}
+                        className="w-12 h-10 rounded border border-slate-300 cursor-pointer"
+                      />
+                      <input
+                        type="text"
+                        value={formData.buttonColor}
+                        onChange={(e) => setFormData({ ...formData, buttonColor: e.target.value })}
+                        className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 font-mono text-sm"
+                        placeholder="#7C3AED"
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-slate-700 mb-2">Button Text</label>
+                    <div className="flex items-center space-x-2">
+                      <input
+                        type="color"
+                        value={formData.buttonTextColor}
+                        onChange={(e) => setFormData({ ...formData, buttonTextColor: e.target.value })}
+                        className="w-12 h-10 rounded border border-slate-300 cursor-pointer"
+                      />
+                      <input
+                        type="text"
+                        value={formData.buttonTextColor}
+                        onChange={(e) => setFormData({ ...formData, buttonTextColor: e.target.value })}
+                        className="flex-1 px-3 py-2 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 font-mono text-sm"
+                        placeholder="#ffffff"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">Order</label>
@@ -268,7 +338,7 @@ export default function AdminBanners() {
                 
                 {/* Overlay with content */}
                 <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                  <div className="text-center text-white px-4">
+                  <div className="text-center px-4" style={{ color: formData.textColor }}>
                     <h2 className="text-3xl font-bold mb-2">
                       {formData.title || 'Banner Title'}
                     </h2>
@@ -276,7 +346,13 @@ export default function AdminBanners() {
                       {formData.subtitle || 'Banner subtitle'}
                     </p>
                     {formData.ctaText && (
-                      <button className="bg-white text-slate-900 px-6 py-2 rounded-sm font-semibold hover:bg-slate-100">
+                      <button 
+                        className="px-6 py-2 rounded-sm font-semibold transition-transform hover:scale-105"
+                        style={{ 
+                          backgroundColor: formData.buttonColor,
+                          color: formData.buttonTextColor
+                        }}
+                      >
                         {formData.ctaText}
                       </button>
                     )}

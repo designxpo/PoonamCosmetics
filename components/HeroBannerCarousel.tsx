@@ -14,7 +14,9 @@ export interface BannerSlide {
   ctaText?: string;
   ctaLink?: string;
   textPosition?: 'left' | 'center' | 'right';
-  textColor?: 'light' | 'dark';
+  textColor?: string;
+  buttonColor?: string;
+  buttonTextColor?: string;
   overlay?: boolean;
 }
 
@@ -58,9 +60,9 @@ export default function HeroBannerCarousel({
   if (slides.length === 0) return null;
 
   const slide = slides[currentSlide];
-  const textColorClass = slide.textColor === 'dark' ? 'text-slate-900' : 'text-white';
-  const subtitleColorClass = slide.textColor === 'dark' ? 'text-slate-500' : 'text-white/80';
-  const descriptionColorClass = slide.textColor === 'dark' ? 'text-slate-600' : 'text-white/90';
+  const textColor = slide.textColor || '#ffffff';
+  const buttonColor = slide.buttonColor || '#7C3AED';
+  const buttonTextColor = slide.buttonTextColor || '#ffffff';
 
   const getTextAlignmentClasses = () => {
     switch (slide.textPosition) {
@@ -110,19 +112,28 @@ export default function HeroBannerCarousel({
           }`}>
             {/* Subtitle */}
             {slide.subtitle && (
-              <p className={`text-sm md:text-base uppercase tracking-[0.3em] mb-4 ${subtitleColorClass} font-medium`}>
+              <p 
+                className="text-sm md:text-base uppercase tracking-[0.3em] mb-4 font-medium opacity-90"
+                style={{ color: textColor }}
+              >
                 {slide.subtitle}
               </p>
             )}
 
             {/* Title */}
-            <h1 className={`text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 ${textColorClass} leading-tight`}>
+            <h1 
+              className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight"
+              style={{ color: textColor }}
+            >
               {slide.title}
             </h1>
 
             {/* Description */}
             {slide.description && (
-              <p className={`text-lg md:text-xl mb-8 ${descriptionColorClass} max-w-2xl`}>
+              <p 
+                className="text-lg md:text-xl mb-8 max-w-2xl opacity-90"
+                style={{ color: textColor }}
+              >
                 {slide.description}
               </p>
             )}
@@ -132,11 +143,11 @@ export default function HeroBannerCarousel({
               <div>
                 <Link
                   href={slide.ctaLink}
-                  className={`inline-block px-8 py-4 rounded-none font-semibold text-base md:text-lg transition-all duration-300 ${
-                    slide.textColor === 'dark'
-                      ? 'bg-slate-900 text-white hover:bg-slate-800'
-                      : 'bg-white text-slate-900 hover:bg-slate-100'
-                  }`}
+                  className="inline-block px-8 py-4 rounded-none font-semibold text-base md:text-lg transition-all duration-300 hover:opacity-90 hover:scale-105"
+                  style={{
+                    backgroundColor: buttonColor,
+                    color: buttonTextColor
+                  }}
                 >
                   {slide.ctaText}
                 </Link>
