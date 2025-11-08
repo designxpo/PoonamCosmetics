@@ -338,11 +338,11 @@ export default function AdminBanners() {
                 
                 {/* Overlay with content */}
                 <div className="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center">
-                  <div className="text-center px-4" style={{ color: formData.textColor }}>
-                    <h2 className="text-3xl font-bold mb-2">
+                  <div className="text-center px-4">
+                    <h2 className="text-3xl font-bold mb-2" style={{ color: formData.textColor }}>
                       {formData.title || 'Banner Title'}
                     </h2>
-                    <p className="text-lg mb-4">
+                    <p className="text-lg mb-4" style={{ color: formData.textColor }}>
                       {formData.subtitle || 'Banner subtitle'}
                     </p>
                     {formData.ctaText && (
