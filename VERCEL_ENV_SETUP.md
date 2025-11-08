@@ -1,36 +1,56 @@
 # Vercel Environment Variables Setup
 
-## Required Environment Variables for Production
+## 🚨 **URGENT: Both APIs Failing on Vercel**
 
-Your Poonam Cosmetics website requires these environment variables to be set on Vercel:
+Your production site is experiencing multiple 500 errors:
+- ❌ `/api/products` - Database connection failing
+- ❌ `/api/upload` - Cloudinary not configured
 
-### 1. MongoDB Connection
-```
-MONGODB_URI=your_mongodb_atlas_connection_string
+**Root Cause**: Environment variables are not set on Vercel.
+
+---
+
+## ✅ **Required Environment Variables**
+
+Copy these **EXACT** values to Vercel:
+
+### 1. MongoDB Connection (Required for all database operations)
+```bash
+MONGODB_URI=mongodb+srv://poonam_cosmetics:BQ4OrBGU79f6sESw@poonamcosmetics.lae9u2d.mongodb.net/poonam-cosmetics
 ```
 
-### 2. JWT Secret
-```
-JWT_SECRET=your_jwt_secret_key
+### 2. JWT Secret (Required for authentication)
+```bash
+JWT_SECRET=gA97DUGfTG1bnArK7SvZRXbP3i2suRFKrxdByJj/OoI=
 ```
 
-### 3. Cloudinary Configuration (Image Uploads)
+### 3. NextAuth Configuration (Required for login)
+```bash
+NEXTAUTH_SECRET=MibfxeIRgzDUNPZsR3HeVJv/GO7gEdOhU/UBtLmabRo=
+NEXTAUTH_URL=https://poonamcosmetics.vercel.app
 ```
+⚠️ **Change URL to your actual Vercel domain**
+
+### 4. Cloudinary Configuration (Required for image uploads)
+```bash
 CLOUDINARY_CLOUD_NAME=dksuiui4c
 CLOUDINARY_API_KEY=291343154813766
 CLOUDINARY_API_SECRET=_23V6o9ssL5wTQlkRU5TUARcysI
 ```
 
-### 4. Next Public URL (Optional)
+### 5. WhatsApp & Site Configuration (Optional but recommended)
+```bash
+NEXT_PUBLIC_WHATSAPP_NUMBER=919999999999
+NEXT_PUBLIC_DELIVERY_CHARGE=50
+NEXT_PUBLIC_FREE_DELIVERY_THRESHOLD=999
+NEXT_PUBLIC_SITE_NAME=Poonam Cosmetics
+NEXT_PUBLIC_SITE_URL=https://poonamcosmetics.vercel.app
 ```
-NEXT_PUBLIC_API_URL=https://your-domain.vercel.app
-```
+⚠️ **Update WhatsApp number and site URL**
 
 ---
 
-## How to Add Environment Variables to Vercel
-
-### Step 1: Go to Vercel Dashboard
+## 📋 **Step-by-Step Setup** (5 Minutes)
 1. Visit https://vercel.com
 2. Login to your account
 3. Select your project: **PoonamCosmetics**

@@ -6,6 +6,18 @@ import Category from '@/models/Category';
 
 export async function GET(request: NextRequest) {
   try {
+    // Check MongoDB connection
+    if (!process.env.MONGODB_URI) {
+      console.error('MONGODB_URI is not configured');
+      return NextResponse.json(
+        { 
+          success: false, 
+          error: 'Database is not configured. Please add MONGODB_URI to environment variables.' 
+        },
+        { status: 500 }
+      );
+    }
+
     await dbConnect();
 
     const searchParams = request.nextUrl.searchParams;
@@ -114,8 +126,19 @@ export async function GET(request: NextRequest) {
     });
   } catch (error: any) {
     console.error('Error fetching products:', error);
+    
+    // Provide detailed error message
+    let errorMessage = 'Failed to fetch products';
+    if (error.message) {
+      errorMessage += `: ${error.message}`;
+    }
+    
     return NextResponse.json(
-      { success: false, error: error.message },
+      { 
+        success: false, 
+        error: errorMessage,
+        details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+      },
       { status: 500 }
     );
   }
@@ -123,6 +146,14 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Check MongoDB connection
+    if (!process.env.MONGODB_URI) {
+      return NextResponse.json(
+        { success: false, error: 'Database is not configured' },
+        { status: 500 }
+      );
+    }
+
     await dbConnect();
 
     const body = await request.json();
