@@ -1,40 +1,48 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 
-const highlights = [
-  {
-    title: 'Bridal Chosen Makeup',
-    description: 'Handpicked premium products for brides',
-    image: 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=600&q=80',
-    link: '/collection/bridal-chosen',
-    bgColor: 'from-pink-100 to-rose-100',
-  },
-  {
-    title: 'Handcrafted Mehndi Cones',
-    description: 'Traditional mehndi for your special day',
-    image: 'https://images.unsplash.com/photo-1610873167013-4c098f9a9d5c?auto=format&fit=crop&w=600&q=80',
-    link: '/category/mehndi',
-    bgColor: 'from-amber-100 to-orange-100',
-  },
-  {
-    title: 'Limited Time Discount',
-    description: 'Up to 30% off on bridal packages',
-    image: 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=600&q=80',
-    link: '/products?sale=true',
-    bgColor: 'from-red-100 to-pink-100',
-  },
-  {
-    title: 'Royal Bridal Sets',
-    description: 'Complete bridal makeup collections',
-    image: 'https://images.unsplash.com/photo-1515688594390-b649af70d282?auto=format&fit=crop&w=600&q=80',
-    link: '/collection/royal-bridal',
-    bgColor: 'from-purple-100 to-indigo-100',
-  },
-];
-
 export default function HighlightBoxes() {
+  const [highlights, setHighlights] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchHighlights();
+  }, []);
+
+  const fetchHighlights = async () => {
+    try {
+      const res = await fetch('/api/highlights');
+      const data = await res.json();
+      
+      if (data.success && data.highlights) {
+        setHighlights(data.highlights);
+      }
+    } catch (error) {
+      console.error('Error fetching highlights:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <section className="py-16 bg-background-section">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-200 border-t-primary-500"></div>
+            <p className="mt-4 text-text-secondary">Loading special collections...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (highlights.length === 0) {
+    return null;
+  }
   return (
     <section className="py-16 bg-background-section">
       <div className="container mx-auto px-4">

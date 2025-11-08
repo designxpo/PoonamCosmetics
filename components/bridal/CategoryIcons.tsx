@@ -1,41 +1,48 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-const categories = [
-  {
-    name: 'Cosmetics',
-    icon: '💄',
-    slug: 'cosmetics',
-  },
-  {
-    name: 'Bridal Makeup',
-    icon: '👰',
-    slug: 'bridal-makeup',
-  },
-  {
-    name: 'Hair Accessories',
-    icon: '💐',
-    slug: 'hair-accessories',
-  },
-  {
-    name: 'Skincare',
-    icon: '🧴',
-    slug: 'skincare',
-  },
-  {
-    name: 'Mehndi',
-    icon: '🎨',
-    slug: 'mehndi',
-  },
-  {
-    name: 'Jewelry',
-    icon: '💍',
-    slug: 'jewelry',
-  },
-];
-
 export default function CategoryIcons() {
+  const [categories, setCategories] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
+
+  const fetchCategories = async () => {
+    try {
+      const res = await fetch('/api/categories');
+      const data = await res.json();
+      
+      if (data.success && data.categories) {
+        // Take only first 6 categories for display
+        setCategories(data.categories.slice(0, 6));
+      }
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <section className="py-16 bg-background-secondary">
+        <div className="container mx-auto px-4">
+          <div className="text-center">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary-200 border-t-primary-500"></div>
+            <p className="mt-4 text-text-secondary">Loading categories...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (categories.length === 0) {
+    return null;
+  }
   return (
     <section className="py-16 bg-background-secondary">
       <div className="container mx-auto px-4">
@@ -54,7 +61,7 @@ export default function CategoryIcons() {
               className="flex flex-col items-center group cursor-pointer"
             >
               <div className="w-24 h-24 md:w-28 md:h-28 rounded-full bg-white shadow-md flex items-center justify-center mb-3 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 text-4xl md:text-5xl">
-                {category.icon}
+                {category.icon || '✨'}
               </div>
               <span className="text-sm md:text-base font-medium text-text-primary group-hover:text-text-primary transition-colors text-center">
                 {category.name}

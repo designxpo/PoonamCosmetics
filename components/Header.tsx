@@ -15,6 +15,7 @@ export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [navigationItems, setNavigationItems] = useState<any[]>([]);
   const pathname = usePathname();
   const router = useRouter();
   const isHome = pathname === '/';
@@ -29,7 +30,31 @@ export default function Header() {
   // Prevent hydration mismatch
   useEffect(() => {
     setMounted(true);
+    fetchNavigationItems();
   }, []);
+
+  const fetchNavigationItems = async () => {
+    try {
+      const res = await fetch('/api/navigation');
+      const data = await res.json();
+      
+      if (data.success && data.items) {
+        setNavigationItems(data.items);
+      }
+    } catch (error) {
+      console.error('Error fetching navigation:', error);
+      // Set default navigation if fetch fails
+      setNavigationItems([
+        { label: 'Home', href: '/', order: 1 },
+        { label: 'Bridal', href: '/collection/bridal', order: 2 },
+        { label: 'Cosmetics', href: '/category/cosmetics', order: 3 },
+        { label: 'Skincare', href: '/category/skincare', order: 4 },
+        { label: 'Haircare', href: '/category/haircare', order: 5 },
+        { label: 'Offers', href: '/products?sale=true', order: 6 },
+        { label: 'Contact', href: '/contact', order: 7 },
+      ]);
+    }
+  };
 
   // Close user menu when clicking outside
   useEffect(() => {
@@ -197,41 +222,13 @@ export default function Header() {
         <div className="container mx-auto px-4">
           <nav className="flex items-center justify-center">
             <ul className="flex items-center space-x-10 md:space-x-12 text-text-primary py-3.5 text-sm md:text-[15px] tracking-wide">
-              <li>
-                <Link href="/" className="font-normal transition-colors hover:text-text-primary">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/collection/bridal" className="font-normal transition-colors hover:text-text-primary">
-                  Bridal
-                </Link>
-              </li>
-              <li>
-                <Link href="/category/cosmetics" className="font-normal transition-colors hover:text-text-primary">
-                  Cosmetics
-                </Link>
-              </li>
-              <li>
-                <Link href="/category/skincare" className="font-normal transition-colors hover:text-text-primary">
-                  Skincare
-                </Link>
-              </li>
-              <li>
-                <Link href="/category/haircare" className="font-normal transition-colors hover:text-text-primary">
-                  Haircare
-                </Link>
-              </li>
-              <li>
-                <Link href="/products?sale=true" className="font-normal transition-colors hover:text-text-primary">
-                  Offers
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="font-normal transition-colors hover:text-text-primary">
-                  Contact
-                </Link>
-              </li>
+              {navigationItems.map((item) => (
+                <li key={item._id}>
+                  <Link href={item.href} className="font-normal transition-colors hover:text-text-primary">
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </nav>
         </div>
@@ -283,42 +280,17 @@ export default function Header() {
                 </li>
               )}
 
-              <li>
-                <Link
-                  href="/"
-                  className="block py-2 font-medium transition-colors text-slate-700 hover:text-text-primary"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/products"
-                  className="block py-2 font-medium transition-colors text-slate-700 hover:text-text-primary"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Products
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/about"
-                  className="block py-2 font-medium transition-colors text-slate-700 hover:text-text-primary"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/contact"
-                  className="block py-2 font-medium transition-colors text-slate-700 hover:text-text-primary"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Contact
-                </Link>
-              </li>
+              {navigationItems.map((item) => (
+                <li key={item._id}>
+                  <Link
+                    href={item.href}
+                    className="block py-2 font-medium transition-colors text-slate-700 hover:text-text-primary"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
 
               {/* Auth Links - Mobile */}
               {mounted && isAuthenticated ? (

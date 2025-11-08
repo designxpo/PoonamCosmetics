@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
-import BridalHeroBanner from '@/components/bridal/BridalHeroBanner';
+import HeroBannerCarousel from '@/components/HeroBannerCarousel';
 import CategoryIcons from '@/components/bridal/CategoryIcons';
 import HighlightBoxes from '@/components/bridal/HighlightBoxes';
 import BestDealsSection from '@/components/bridal/BestDealsSection';
@@ -13,11 +13,48 @@ import ProductCard from '@/components/ProductCard';
 
 export default function Home() {
   const [popularProducts, setPopularProducts] = useState<any[]>([]);
+  const [banners, setBanners] = useState<any[]>([]);
+  const [features, setFeatures] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchPopularProducts();
+    fetchBanners();
+    fetchFeatures();
   }, []);
+
+  const fetchBanners = async () => {
+    try {
+      const res = await fetch('/api/banners');
+      const data = await res.json();
+      
+      if (data.success && data.banners) {
+        setBanners(data.banners);
+      }
+    } catch (error) {
+      console.error('Error fetching banners:', error);
+    }
+  };
+
+  const fetchFeatures = async () => {
+    try {
+      const res = await fetch('/api/features');
+      const data = await res.json();
+      
+      if (data.success && data.features) {
+        setFeatures(data.features);
+      }
+    } catch (error) {
+      console.error('Error fetching features:', error);
+      // Set default features if fetch fails
+      setFeatures([
+        { icon: '🚚', title: 'Free Shipping', description: 'On orders above ₹999', order: 1 },
+        { icon: '✨', title: '100% Authentic', description: 'Genuine products guaranteed', order: 2 },
+        { icon: '💝', title: 'Bridal Special', description: 'Expert consultation available', order: 3 },
+        { icon: '💬', title: '24/7 Support', description: 'Always here to help', order: 4 },
+      ]);
+    }
+  };
 
   const fetchPopularProducts = async () => {
     try {
@@ -38,7 +75,7 @@ export default function Home() {
     <>
       <Header />
       <main className="bg-white">
-        <BridalHeroBanner />
+        {banners.length > 0 && <HeroBannerCarousel slides={banners} />}
         <CategoryIcons />
 
         <section className="py-16 bg-background-section">
@@ -85,26 +122,13 @@ export default function Home() {
         <section className="py-16 bg-background-secondary">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-10 text-center">
-              <div className="space-y-3">
-                <div className="text-5xl">🚚</div>
-                <h3 className="font-medium tracking-wide text-base md:text-lg text-text-primary">Free Shipping</h3>
-                <p className="text-text-secondary text-sm">On orders above ₹999</p>
-              </div>
-              <div className="space-y-3">
-                <div className="text-5xl">✨</div>
-                <h3 className="font-medium tracking-wide text-base md:text-lg text-text-primary">100% Authentic</h3>
-                <p className="text-text-secondary text-sm">Genuine products guaranteed</p>
-              </div>
-              <div className="space-y-3">
-                <div className="text-5xl">💝</div>
-                <h3 className="font-medium tracking-wide text-base md:text-lg text-text-primary">Bridal Special</h3>
-                <p className="text-text-secondary text-sm">Expert consultation available</p>
-              </div>
-              <div className="space-y-3">
-                <div className="text-5xl">💬</div>
-                <h3 className="font-medium tracking-wide text-base md:text-lg text-text-primary">24/7 Support</h3>
-                <p className="text-text-secondary text-sm">We're here to help</p>
-              </div>
+              {features.map((feature, index) => (
+                <div key={index} className="space-y-3">
+                  <div className="text-5xl">{feature.icon}</div>
+                  <h3 className="font-medium tracking-wide text-base md:text-lg text-text-primary">{feature.title}</h3>
+                  <p className="text-text-secondary text-sm">{feature.description}</p>
+                </div>
+              ))}
             </div>
           </div>
         </section>
