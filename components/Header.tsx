@@ -213,6 +213,7 @@ export default function Header() {
             >
               {mobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
             </button>
+            </div>
           </div>
         </div>
       </div>
@@ -234,37 +235,37 @@ export default function Header() {
         </div>
       </div>
 
-        {/* Search Bar - Dropdown */}
-        {searchOpen && (
-          <div className="pt-4 pb-2 px-4 border-t border-border-light">
-            <form onSubmit={handleSearch}>
-              <div className="relative max-w-2xl mx-auto">
-                <input
-                  type="text"
-                  id="header-search"
-                  name="search"
-                  placeholder="Search for products..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full px-5 py-3 rounded-none focus:outline-none focus:ring-2 border border-border-main bg-white text-slate-800 placeholder-slate-400 focus:ring-text-primary focus:border-text-primary"
-                  autoFocus
-                />
-                <button
-                  type="submit"
-                  className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-none transition-colors bg-white text-text-primary border-2 border-text-primary hover:bg-text-primary hover:text-white"
-                  aria-label="Search"
-                >
-                  <FiSearch size={18} />
-                </button>
-              </div>
-            </form>
-          </div>
-        )}
+      {/* Search Bar - Dropdown */}
+      {searchOpen && (
+        <div className="pt-4 pb-2 px-4 border-t border-border-light">
+          <form onSubmit={handleSearch}>
+            <div className="relative max-w-2xl mx-auto">
+              <input
+                type="text"
+                id="header-search"
+                name="search"
+                placeholder="Search for products..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full px-5 py-3 rounded-none focus:outline-none focus:ring-2 border border-border-main bg-white text-slate-800 placeholder-slate-400 focus:ring-text-primary focus:border-text-primary"
+                autoFocus
+              />
+              <button
+                type="submit"
+                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-none transition-colors bg-white text-text-primary border-2 border-text-primary hover:bg-text-primary hover:text-white"
+                aria-label="Search"
+              >
+                <FiSearch size={18} />
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
-        {/* Mobile Navigation Menu */}
-        {mobileMenuOpen && (
-          <nav className="lg:hidden pt-4 pb-2 border-t border-slate-100 mt-4">
-            <ul className="space-y-3">
+      {/* Mobile Navigation Menu */}
+      {mobileMenuOpen && (
+        <nav className="lg:hidden pt-4 pb-2 border-t border-slate-100 mt-4">
+          <ul className="space-y-3">
               {/* User Info - Mobile */}
               {mounted && isAuthenticated && user && (
                 <li className="pb-3 mb-3 border-b border-slate-100">
@@ -355,7 +356,6 @@ export default function Header() {
             </ul>
           </nav>
         )}
-      </div>
     </header>
   );
 }
