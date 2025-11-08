@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import dbConnect from '@/lib/mongodb';
 import FeaturedCollection from '@/models/FeaturedCollection';
+import { verifyToken } from '@/lib/auth';
 
 // GET - Fetch all active featured collections
 export async function GET(request: NextRequest) {
@@ -28,6 +29,25 @@ export async function GET(request: NextRequest) {
 // POST - Create a new featured collection (Admin only)
 export async function POST(request: NextRequest) {
   try {
+    // Verify admin authentication - check both cookie and Authorization header
+    const token = request.cookies.get('token')?.value || 
+                  request.headers.get('authorization')?.replace('Bearer ', '');
+    
+    if (!token) {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized - No token provided' },
+        { status: 401 }
+      );
+    }
+
+    const decoded = await verifyToken(token);
+    if (!decoded || decoded.role !== 'admin') {
+      return NextResponse.json(
+        { success: false, error: 'Forbidden - Admin access required' },
+        { status: 403 }
+      );
+    }
+
     await dbConnect();
 
     const body = await request.json();
