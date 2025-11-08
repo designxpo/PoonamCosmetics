@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useAuthStore } from '@/store/authStore';
@@ -16,7 +16,8 @@ import {
   FiLogOut,
   FiMenu,
   FiX,
-  FiEye
+  FiEye,
+  FiTool
 } from 'react-icons/fi';
 
 interface AdminLayoutProps {
@@ -25,6 +26,7 @@ interface AdminLayoutProps {
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const router = useRouter();
+  const pathname = usePathname();
   const { isAuthenticated, user, logout } = useAuthStore();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -63,6 +65,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
     { name: 'Collections', icon: FiImage, path: '/admin/collections' },
     { name: 'Users', icon: FiUsers, path: '/admin/users' },
     { name: 'Preview', icon: FiEye, path: '/admin/preview' },
+    { name: 'Maintenance', icon: FiTool, path: '/admin/maintenance' },
     { name: 'Settings', icon: FiSettings, path: '/admin/settings' },
   ];
 
@@ -136,17 +139,36 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
           </div>
           
           <nav className="p-4 space-y-1">
-            {menuItems.map((item) => (
-              <Link
-                key={item.path}
-                href={item.path}
-                onClick={() => setSidebarOpen(false)}
-                className="flex items-center gap-3 px-4 py-3 text-text-primary hover:bg-contrast-50 hover:text-primary-500 rounded-lg transition-colors"
-              >
-                <item.icon size={20} />
-                <span className="font-medium">{item.name}</span>
-              </Link>
-            ))}
+            {menuItems.map((item) => {
+              const isActive = pathname === item.path;
+              return (
+                <Link
+                  key={item.path}
+                  href={item.path}
+                  onClick={() => setSidebarOpen(false)}
+                  className={`
+                    flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 relative group
+                    ${isActive 
+                      ? 'bg-primary-500 text-white shadow-md shadow-primary-500/30' 
+                      : 'text-text-primary hover:bg-contrast-50 hover:text-primary-500'
+                    }
+                  `}
+                >
+                  {/* Active indicator bar */}
+                  {isActive && (
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-white rounded-r-full" />
+                  )}
+                  
+                  <item.icon size={20} className={isActive ? 'text-white' : ''} />
+                  <span>{item.name}</span>
+                  
+                  {/* Hover effect */}
+                  {!isActive && (
+                    <div className="absolute inset-0 bg-primary-500/5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                  )}
+                </Link>
+              );
+            })}
           </nav>
         </aside>
 

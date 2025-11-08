@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export default function CategoryIcons() {
   const [categories, setCategories] = useState<any[]>([]);
@@ -60,8 +61,19 @@ export default function CategoryIcons() {
               href={`/category/${category.slug}`}
               className="flex flex-col items-center group cursor-pointer"
             >
-              <div className="w-24 h-24 md:w-28 md:h-28 rounded-full bg-white shadow-md flex items-center justify-center mb-3 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 text-4xl md:text-5xl">
-                {category.icon || '✨'}
+              <div className="w-24 h-24 md:w-28 md:h-28 rounded-full bg-white shadow-md flex items-center justify-center mb-3 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 overflow-hidden relative">
+                {category.image ? (
+                  <Image
+                    src={category.image}
+                    alt={category.name}
+                    fill
+                    className="object-cover"
+                  />
+                ) : (
+                  <span className="text-4xl md:text-5xl">
+                    {category.icon || '✨'}
+                  </span>
+                )}
               </div>
               <span className="text-sm md:text-base font-medium text-text-primary group-hover:text-text-primary transition-colors text-center">
                 {category.name}

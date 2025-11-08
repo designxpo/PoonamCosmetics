@@ -44,8 +44,22 @@ export async function GET(request: NextRequest) {
         if (!isObjectId) {
           // Convert slugs to IDs
           const categoryDocs = await Category.find({ slug: { $in: categories } });
-          const categoryIds = categoryDocs.map(cat => cat._id);
-          query.category = { $in: categoryIds };
+          if (categoryDocs.length > 0) {
+            const categoryIds = categoryDocs.map(cat => cat._id);
+            query.category = { $in: categoryIds };
+          } else {
+            // No matching categories found, return empty result
+            return NextResponse.json({
+              success: true,
+              products: [],
+              pagination: {
+                total: 0,
+                page,
+                pages: 0,
+                limit,
+              },
+            });
+          }
         } else {
           query.category = { $in: categories };
         }
@@ -104,13 +118,28 @@ export async function GET(request: NextRequest) {
         break;
     }
 
-    const products = await Product.find(query)
-      .populate('category', 'name slug')
-      .populate('brand', 'name slug logo')
-      .sort(sortOption)
-      .limit(limit)
-      .skip(skip)
-      .lean();
+    // Fetch products with error handling for populate
+    let products;
+    try {
+      products = await Product.find(query)
+        .populate('category', 'name slug')
+        .populate('brand', 'name slug logo')
+        .sort(sortOption)
+        .limit(limit)
+        .skip(skip)
+        .lean();
+    } catch (populateError: any) {
+      console.error('Error populating products:', populateError);
+      // If populate fails, fetch without populate
+      products = await Product.find(query)
+        .sort(sortOption)
+        .limit(limit)
+        .skip(skip)
+        .lean();
+      
+      // Log products with invalid category references
+      console.log('Warning: Some products have invalid category references');
+    }
 
     const total = await Product.countDocuments(query);
 
