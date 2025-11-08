@@ -88,9 +88,9 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white shadow-md">
+    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-lg border-b border-slate-100">
       {/* Upper Nav - Logo, Search, Account, Cart */}
-      <div className="border-b border-border-light">
+      <div className="border-b border-slate-100">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             {/* Logo */}
@@ -219,13 +219,13 @@ export default function Header() {
       </div>
 
       {/* Second Nav - Menu Items */}
-      <div className="hidden lg:block bg-background-secondary">
+      <div className="hidden lg:block bg-gradient-to-r from-purple-50 via-pink-50 to-purple-50">
         <div className="container mx-auto px-4">
           <nav className="flex items-center justify-center">
-            <ul className="flex items-center space-x-10 md:space-x-12 text-text-primary py-3.5 text-sm md:text-[15px] tracking-wide">
+            <ul className="flex items-center space-x-10 md:space-x-12 text-slate-700 py-4 text-sm md:text-[15px] tracking-wide">
               {navigationItems.map((item) => (
                 <li key={item._id}>
-                  <Link href={item.href} className="font-normal transition-colors hover:text-text-primary">
+                  <Link href={item.href} className="font-medium transition-all hover:text-purple-600 hover:scale-105 inline-block">
                     {item.label}
                   </Link>
                 </li>
