@@ -5,11 +5,12 @@ import { verifyToken } from '@/lib/auth';
 
 export async function GET(request: NextRequest) {
   try {
-    // Verify admin authentication
-    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    // Verify admin authentication - check both cookie and Authorization header
+    const token = request.cookies.get('token')?.value || 
+                  request.headers.get('authorization')?.replace('Bearer ', '');
     if (!token) {
       return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
+        { success: false, error: 'Unauthorized - No token provided' },
         { status: 401 }
       );
     }
@@ -17,8 +18,8 @@ export async function GET(request: NextRequest) {
     const decoded = verifyToken(token);
     if (!decoded || decoded.role !== 'admin') {
       return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
-        { status: 401 }
+        { success: false, error: 'Forbidden - Admin access required' },
+        { status: 403 }
       );
     }
 

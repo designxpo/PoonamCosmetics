@@ -7,12 +7,13 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: NextRequest) {
   try {
-    // Verify admin authentication
-    const token = request.headers.get('authorization')?.replace('Bearer ', '');
+    // Verify admin authentication - check both cookie and Authorization header
+    const token = request.cookies.get('token')?.value || 
+                  request.headers.get('authorization')?.replace('Bearer ', '');
     
     if (!token) {
       return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
+        { success: false, error: 'Unauthorized - No token provided' },
         { status: 401 }
       );
     }
@@ -25,8 +26,8 @@ export async function GET(request: NextRequest) {
     
     if (!decoded || userRole !== 'admin') {
       return NextResponse.json(
-        { success: false, error: 'Unauthorized - Admin access required' },
-        { status: 401 }
+        { success: false, error: 'Forbidden - Admin access required' },
+        { status: 403 }
       );
     }
 
