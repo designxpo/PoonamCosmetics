@@ -235,30 +235,84 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Search Bar - Dropdown */}
+      {/* Search Bar - Dropdown with Modern UI */}
       {searchOpen && (
-        <div className="pt-4 pb-2 px-4 border-t border-border-light">
-          <form onSubmit={handleSearch}>
-            <div className="relative max-w-2xl mx-auto">
-              <input
-                type="text"
-                id="header-search"
-                name="search"
-                placeholder="Search for products..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-5 py-3 rounded-none focus:outline-none focus:ring-2 border border-border-main bg-white text-slate-800 placeholder-slate-400 focus:ring-text-primary focus:border-text-primary"
-                autoFocus
-              />
-              <button
-                type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-none transition-colors bg-white text-text-primary border-2 border-text-primary hover:bg-text-primary hover:text-white"
-                aria-label="Search"
-              >
-                <FiSearch size={18} />
-              </button>
-            </div>
-          </form>
+        <div className="bg-gradient-to-b from-white to-slate-50 border-t border-slate-200 shadow-lg">
+          <div className="container mx-auto px-4 py-6">
+            <form onSubmit={handleSearch}>
+              <div className="relative max-w-3xl mx-auto">
+                {/* Search Icon - Left Side */}
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                  <FiSearch size={22} />
+                </div>
+                
+                {/* Input Field */}
+                <input
+                  type="text"
+                  id="header-search"
+                  name="search"
+                  placeholder="Search for lipsticks, foundations, skincare..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-14 pr-32 py-4 rounded-xl border-2 border-slate-200 bg-white text-slate-800 placeholder-slate-400 
+                           focus:outline-none focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 
+                           transition-all duration-200 shadow-sm hover:shadow-md text-base"
+                  autoFocus
+                />
+                
+                {/* Search Button */}
+                <button
+                  type="submit"
+                  disabled={!searchQuery.trim()}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2.5 rounded-lg 
+                           bg-primary-500 text-white font-medium
+                           hover:bg-primary-600 active:scale-95
+                           disabled:opacity-50 disabled:cursor-not-allowed
+                           transition-all duration-200 shadow-md hover:shadow-lg
+                           flex items-center gap-2"
+                  aria-label="Search"
+                >
+                  <span className="hidden sm:inline">Search</span>
+                  <FiSearch size={18} className="sm:hidden" />
+                </button>
+
+                {/* Close Button */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSearchOpen(false);
+                    setSearchQuery('');
+                  }}
+                  className="absolute -top-12 right-0 text-slate-600 hover:text-slate-900 transition-colors"
+                  aria-label="Close search"
+                >
+                  <FiX size={24} />
+                </button>
+              </div>
+
+              {/* Popular Searches */}
+              <div className="max-w-3xl mx-auto mt-4">
+                <p className="text-xs text-slate-500 mb-2">Popular searches:</p>
+                <div className="flex flex-wrap gap-2">
+                  {['Lipstick', 'Foundation', 'Mascara', 'Skincare', 'Bridal Makeup'].map((term) => (
+                    <button
+                      key={term}
+                      type="button"
+                      onClick={() => {
+                        setSearchQuery(term);
+                        handleSearch({ preventDefault: () => {} } as React.FormEvent);
+                      }}
+                      className="px-3 py-1.5 rounded-full bg-white border border-slate-200 
+                               text-xs text-slate-700 hover:border-primary-500 hover:text-primary-600 
+                               hover:bg-primary-50 transition-all duration-200"
+                    >
+                      {term}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </form>
+          </div>
         </div>
       )}
 
