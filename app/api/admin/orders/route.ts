@@ -12,6 +12,7 @@ export async function GET(request: NextRequest) {
                   request.headers.get('authorization')?.replace('Bearer ', '');
     
     if (!token) {
+      console.log('[Orders API] No token provided');
       return NextResponse.json(
         { success: false, error: 'Unauthorized - No token provided' },
         { status: 401 }
@@ -19,12 +20,14 @@ export async function GET(request: NextRequest) {
     }
 
     const decoded = verifyToken(token);
+    console.log('[Orders API] Token decoded:', decoded ? { userId: decoded.userId || decoded.id, role: decoded.role } : 'null');
     
     // Handle both old and new token formats
     const userRole = decoded?.role;
     const userId = decoded?.userId || decoded?.id;
     
     if (!decoded || userRole !== 'admin') {
+      console.log('[Orders API] Access denied - Role:', userRole);
       return NextResponse.json(
         { success: false, error: 'Forbidden - Admin access required' },
         { status: 403 }
