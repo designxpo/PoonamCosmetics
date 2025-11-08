@@ -45,13 +45,13 @@ export default function Header() {
       console.error('Error fetching navigation:', error);
       // Set default navigation if fetch fails
       setNavigationItems([
-        { label: 'Home', href: '/', order: 1 },
-        { label: 'Bridal', href: '/collection/bridal', order: 2 },
-        { label: 'Cosmetics', href: '/category/cosmetics', order: 3 },
-        { label: 'Skincare', href: '/category/skincare', order: 4 },
-        { label: 'Haircare', href: '/category/haircare', order: 5 },
-        { label: 'Offers', href: '/products?sale=true', order: 6 },
-        { label: 'Contact', href: '/contact', order: 7 },
+        { _id: '1', label: 'Home', href: '/', order: 1 },
+        { _id: '2', label: 'Bridal', href: '/collection/bridal', order: 2 },
+        { _id: '3', label: 'Cosmetics', href: '/category/cosmetics', order: 3 },
+        { _id: '4', label: 'Skincare', href: '/category/skincare', order: 4 },
+        { _id: '5', label: 'Haircare', href: '/category/haircare', order: 5 },
+        { _id: '6', label: 'Offers', href: '/products?sale=true', order: 6 },
+        { _id: '7', label: 'Contact', href: '/contact', order: 7 },
       ]);
     }
   };
