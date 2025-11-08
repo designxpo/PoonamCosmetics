@@ -40,11 +40,13 @@ export async function PUT(
   { params }: { params: { id: string } }
 ) {
   try {
-    // Verify admin authentication
-    const token = request.cookies.get('token')?.value;
+    // Verify admin authentication - check both cookie and Authorization header
+    const token = request.cookies.get('token')?.value || 
+                  request.headers.get('authorization')?.replace('Bearer ', '');
+    
     if (!token) {
       return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
+        { success: false, error: 'Unauthorized - No token provided' },
         { status: 401 }
       );
     }
@@ -52,7 +54,7 @@ export async function PUT(
     const decoded = await verifyToken(token);
     if (!decoded || decoded.role !== 'admin') {
       return NextResponse.json(
-        { success: false, error: 'Forbidden' },
+        { success: false, error: 'Forbidden - Admin access required' },
         { status: 403 }
       );
     }
@@ -92,11 +94,13 @@ export async function DELETE(
   { params }: { params: { id: string } }
 ) {
   try {
-    // Verify admin authentication
-    const token = request.cookies.get('token')?.value;
+    // Verify admin authentication - check both cookie and Authorization header
+    const token = request.cookies.get('token')?.value || 
+                  request.headers.get('authorization')?.replace('Bearer ', '');
+    
     if (!token) {
       return NextResponse.json(
-        { success: false, error: 'Unauthorized' },
+        { success: false, error: 'Unauthorized - No token provided' },
         { status: 401 }
       );
     }
@@ -104,7 +108,7 @@ export async function DELETE(
     const decoded = await verifyToken(token);
     if (!decoded || decoded.role !== 'admin') {
       return NextResponse.json(
-        { success: false, error: 'Forbidden' },
+        { success: false, error: 'Forbidden - Admin access required' },
         { status: 403 }
       );
     }
