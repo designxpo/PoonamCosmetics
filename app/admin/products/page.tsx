@@ -26,10 +26,18 @@ export default function AdminProductsPage() {
 
   const fetchProducts = async () => {
     try {
+      setLoading(true);
       const res = await fetch('/api/products?limit=1000&showAll=true');
       const data = await res.json();
+      
+      console.log('Fetched products:', data);
+      
       if (data.success) {
-        setProducts(data.products);
+        setProducts(data.products || []);
+        console.log('Products set:', data.products?.length || 0);
+      } else {
+        console.error('Failed to fetch products:', data.error);
+        toast.error(data.error || 'Failed to load products');
       }
     } catch (error) {
       console.error('Error fetching products:', error);
@@ -153,6 +161,12 @@ export default function AdminProductsPage() {
     return matchesSearch && matchesCategory;
   });
 
+  // Debug logging
+  console.log('Total products:', products.length);
+  console.log('Filtered products:', filteredProducts.length);
+  console.log('Search query:', searchQuery);
+  console.log('Category filter:', categoryFilter);
+
   if (loading) {
     return (
       <AdminLayout>
@@ -169,7 +183,14 @@ export default function AdminProductsPage() {
         <div className="flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold text-slate-900">Products</h1>
-            <p className="text-slate-600 mt-1">Manage your product inventory</p>
+            <p className="text-slate-600 mt-1">
+              Manage your product inventory 
+              {products.length > 0 && (
+                <span className="ml-2 text-sm">
+                  ({filteredProducts.length} of {products.length} products{searchQuery || categoryFilter !== 'all' ? ' shown' : ''})
+                </span>
+              )}
+            </p>
           </div>
           <Link href="/admin/products/new" className="btn-primary flex items-center space-x-2">
             <FiPlus />
