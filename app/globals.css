@@ -3,19 +3,19 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0; /* Black */
+  --foreground-rgb: 47, 60, 126; /* Blue #2F3C7E */
   --background-start-rgb: 255, 255, 255;
-  --background-end-rgb: 255, 255, 255; /* Pure white */
-  --primary-color: #000000; /* Black */
-  --primary-hover: #1a1a1a; /* Dark gray */
-  --secondary-color: #FFFFFF; /* White */
-  --accent-color: #000000; /* Black */
-  --cream-tint: #FFFFFF; /* White */
+  --background-end-rgb: 251, 234, 235; /* Pastel pink #FBEAEB */
+  --primary-color: #2F3C7E; /* Blue */
+  --primary-hover: #1F2C6E; /* Darker blue */
+  --secondary-color: #FBEAEB; /* Pastel pink */
+  --accent-color: #2F3C7E; /* Blue */
+  --cream-tint: #FBEAEB; /* Pastel pink */
 }
 
 body {
   color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-start-rgb));
+  background: linear-gradient(to bottom, rgb(var(--background-start-rgb)), rgb(var(--background-end-rgb)));
   font-family: var(--font-poppins), -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -27,7 +27,7 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: -0.025em;
-  color: #000000; /* Black */
+  color: #2F3C7E; /* Blue */
 }
 
 h1 {
@@ -69,18 +69,18 @@ nav a {
 }
 
 ::-webkit-scrollbar-track {
-  background: #F1F5F9; /* Slate-100 */
+  background: #FBEAEB; /* Pastel pink */
   border-radius: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #000000; /* Black */
+  background: #2F3C7E; /* Blue */
   border-radius: 10px;
-  border: 2px solid #F1F5F9;
+  border: 2px solid #FBEAEB;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #1a1a1a; /* Dark gray */
+  background: #1F2C6E; /* Darker blue */
 }
 
 /* Modern animations */
@@ -147,14 +147,14 @@ nav a {
 @layer components {
   /* Modern Primary Button */
   .btn-primary {
-    background: #000000;
+    background: #2F3C7E;
     color: #FFFFFF;
     padding: 0.875rem 2rem;
     border-radius: 12px;
     font-weight: 600;
     font-size: 0.9375rem;
-    box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.4),
-                0 2px 8px -2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 14px -2px rgba(47, 60, 126, 0.4),
+                0 2px 8px -2px rgba(47, 60, 126, 0.2);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     border: none;
     cursor: pointer;
@@ -179,9 +179,9 @@ nav a {
   
   .btn-primary:hover {
     transform: translateY(-2px);
-    background: #1a1a1a;
-    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5),
-                0 4px 12px -2px rgba(0, 0, 0, 0.3);
+    background: #1F2C6E;
+    box-shadow: 0 8px 24px -4px rgba(47, 60, 126, 0.5),
+                0 4px 12px -2px rgba(47, 60, 126, 0.3);
   }
   
   .btn-primary:active {
@@ -190,49 +190,49 @@ nav a {
 
   /* Modern Secondary Button */
   .btn-gold {
-    background: #000000;
-    color: #FFFFFF;
+    background: #FBEAEB;
+    color: #2F3C7E;
     padding: 0.875rem 2rem;
     border-radius: 12px;
     font-weight: 600;
     font-size: 0.9375rem;
-    box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.4),
-                0 2px 8px -2px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 14px -2px rgba(251, 234, 235, 0.4),
+                0 2px 8px -2px rgba(251, 234, 235, 0.2);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: none;
+    border: 2px solid #2F3C7E;
     cursor: pointer;
   }
   
   .btn-gold:hover {
     transform: translateY(-2px);
-    background: #1a1a1a;
-    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5),
-                0 4px 12px -2px rgba(0, 0, 0, 0.3);
+    background: #F5D4D6;
+    box-shadow: 0 8px 24px -4px rgba(251, 234, 235, 0.5),
+                0 4px 12px -2px rgba(251, 234, 235, 0.3);
   }
 
   .btn-secondary {
-    background: #F8FAFC;
-    color: #1E293B;
+    background: #FBEAEB;
+    color: #2F3C7E;
     padding: 0.875rem 2rem;
     border-radius: 12px;
     font-weight: 600;
     font-size: 0.9375rem;
-    box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px -2px rgba(47, 60, 126, 0.1);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 2px solid #E2E8F0;
+    border: 2px solid #2F3C7E;
     cursor: pointer;
   }
   
   .btn-secondary:hover {
-    background: #F1F5F9;
-    border-color: #CBD5E1;
+    background: #F5D4D6;
+    border-color: #1F2C6E;
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 12px -2px rgba(47, 60, 126, 0.15);
   }
 
   .btn-outline {
-    border: 2px solid #000000;
-    color: #000000;
+    border: 2px solid #2F3C7E;
+    color: #2F3C7E;
     background-color: transparent;
     padding: 0.875rem 2rem;
     border-radius: 12px;
@@ -243,36 +243,36 @@ nav a {
   }
   
   .btn-outline:hover {
-    background: #000000;
+    background: #2F3C7E;
     color: #FFFFFF;
-    border-color: #000000;
+    border-color: #2F3C7E;
     transform: translateY(-2px);
-    box-shadow: 0 4px 14px -2px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 4px 14px -2px rgba(47, 60, 126, 0.3);
   }
 
   /* Modern Card Style */
   .custom-card {
     background: #FFFFFF;
     border-radius: 16px;
-    border: 1px solid #E2E8F0;
+    border: 1px solid #FBEAEB;
     padding: 1.5rem;
-    box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.08),
-                0 2px 8px -2px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 4px 16px -4px rgba(47, 60, 126, 0.08),
+                0 2px 8px -2px rgba(47, 60, 126, 0.04);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .custom-card:hover {
-    box-shadow: 0 12px 32px -8px rgba(0, 0, 0, 0.15),
-                0 8px 20px -4px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 12px 32px -8px rgba(47, 60, 126, 0.15),
+                0 8px 20px -4px rgba(47, 60, 126, 0.08);
     transform: translateY(-4px);
-    border-color: #CBD5E1;
+    border-color: #2F3C7E;
   }
 
   /* Modern Input styles */
   .input-field {
     width: 100%;
     padding: 0.875rem 1.25rem;
-    border: 2px solid #E2E8F0;
+    border: 2px solid #FBEAEB;
     border-radius: 12px;
     background-color: #FFFFFF;
     outline: none;
@@ -281,13 +281,13 @@ nav a {
   }
   
   .input-field:focus {
-    border-color: #000000;
-    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.1);
+    border-color: #2F3C7E;
+    box-shadow: 0 0 0 4px rgba(47, 60, 126, 0.1);
     background: #FEFEFE;
   }
   
   .input-field:hover:not(:focus) {
-    border-color: #CBD5E1;
+    border-color: #2F3C7E;
   }
 
   /* Modern Badge */
@@ -320,9 +320,9 @@ nav a {
   }
   
   .badge-sale {
-    background: #000000;
+    background: #2F3C7E;
     color: #FFFFFF;
-    box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 2px 8px -2px rgba(47, 60, 126, 0.4);
   }
 }
 
@@ -334,7 +334,7 @@ a, .menu-text {
 }
 
 a:hover, .menu-text:hover {
-  color: #000000;
+  color: #2F3C7E;
 }
 
 a::after {
@@ -344,7 +344,7 @@ a::after {
   height: 2px;
   bottom: -2px;
   left: 0;
-  background: #000000;
+  background: #2F3C7E;
   transition: width 0.3s ease-in-out;
 }
 

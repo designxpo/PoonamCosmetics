@@ -70,7 +70,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   ];
 
   return (
-    <div className="min-h-screen bg-slate-50">
+    <div className="min-h-screen" style={{ backgroundColor: '#FBEAEB' }}>
       {/* Top Bar */}
       <header className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
         <div className="flex items-center justify-between px-4 py-3">
@@ -91,7 +91,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   priority
                 />
               </div>
-              <span className="text-xl font-bold text-black hidden sm:inline">Admin</span>
+              <span className="text-xl font-bold hidden sm:inline" style={{ color: '#2F3C7E' }}>Admin</span>
             </Link>
           </div>
           <div className="flex items-center gap-4">
@@ -149,10 +149,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   className={`
                     flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-all duration-200 relative group
                     ${isActive 
-                      ? 'bg-black text-white shadow-md' 
-                      : 'text-text-primary hover:bg-slate-100 hover:text-black'
+                      ? 'text-white shadow-md' 
+                      : 'text-text-primary hover:bg-slate-100'
                     }
                   `}
+                  style={isActive ? { backgroundColor: '#2F3C7E' } : {}}
                 >
                   {/* Active indicator bar */}
                   {isActive && (
@@ -164,7 +165,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   
                   {/* Hover effect */}
                   {!isActive && (
-                    <div className="absolute inset-0 bg-slate-50 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" />
+                    <div className="absolute inset-0 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200" style={{ backgroundColor: '#FBEAEB' }} />
                   )}
                 </Link>
               );
