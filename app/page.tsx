@@ -78,13 +78,13 @@ export default function Home() {
         {banners.length > 0 && <HeroBannerCarousel slides={banners} />}
         <CategoryIcons />
 
-        <section className="py-16 bg-background-section">
+        <section className="py-16 bg-primary-100">
           <div className="container mx-auto px-4">
             <div className="text-center mb-12">
-              <h2 className="text-2xl md:text-3xl font-medium tracking-wide text-text-primary mb-2.5">
+              <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-3">
                 Popular Products
               </h2>
-              <p className="text-text-secondary text-sm md:text-base">Bestselling items loved by our customers</p>
+              <p className="text-text-secondary">Bestselling items loved by our customers</p>
             </div>
 
             {loading ? (
@@ -119,7 +119,7 @@ export default function Home() {
         <BrandsSection />
         <BestDealsSection />
 
-        <section className="py-16 bg-background-secondary">
+        <section className="py-16 bg-white">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-10 text-center">
               {features.map((feature, index) => (

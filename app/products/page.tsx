@@ -196,7 +196,7 @@ function ProductsContent() {
     <>
       <Header />
       <ScrollingBanner />
-      <main className="min-h-screen bg-slate-50 pb-20">
+  <main className="min-h-screen bg-primary-100 pb-20">
         {/* Hero Banner */}
         <PageHero
           page="products"
@@ -206,7 +206,7 @@ function ProductsContent() {
         />
 
         {/* Breadcrumb */}
-        <div className="bg-white border-b border-slate-200">
+  <div className="bg-white border-b border-slate-200">
           <div className="container mx-auto px-4 py-4">
             <div className="flex items-center gap-2 text-sm text-slate-600">
               <Link href="/" className="hover:text-primary-600">Home</Link>
@@ -216,7 +216,7 @@ function ProductsContent() {
           </div>
         </div>
 
-        <div className="container mx-auto px-4 py-8">
+  <div className="container mx-auto px-4 py-8 bg-primary-100 rounded-xl shadow-lg">
           <div className="flex gap-8">
             {/* Sidebar Filters */}
             <aside className="hidden lg:block w-64 flex-shrink-0">
@@ -418,7 +418,7 @@ function ProductsContent() {
                   
                   <button
                     onClick={clearFilters}
-                    className="text-sm text-slate-500 hover:text-slate-700 underline"
+                    className="text-sm text-slate-500 hover:text-slate-700"
                   >
                     Clear all
                   </button>

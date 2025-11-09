@@ -5,8 +5,10 @@ import AdminLayout from '@/components/admin/AdminLayout';
 import ImageUpload from '@/components/admin/ImageUpload';
 import { FiEdit2, FiTrash2, FiPlus, FiImage } from 'react-icons/fi';
 import toast from 'react-hot-toast';
+import { useAuthStore } from '@/store/authStore';
 
 export default function AdminBanners() {
+  const { token } = useAuthStore();
   const [banners, setBanners] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -57,7 +59,10 @@ export default function AdminBanners() {
     try {
       const response = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify(formData),
       });
 
@@ -66,7 +71,11 @@ export default function AdminBanners() {
       if (data.success) {
         toast.success(editingId ? 'Banner updated!' : 'Banner created!');
         fetchBanners();
-        resetForm();
+        setShowForm(false);
+        setEditingId(null);
+        setFormData({
+          title: '', subtitle: '', image: '', ctaText: '', ctaLink: '', textColor: '#ffffff', buttonColor: '#7C3AED', buttonTextColor: '#ffffff', order: 0, isActive: true,
+        });
       } else {
         toast.error(data.error || 'Something went wrong');
       }
@@ -98,6 +107,9 @@ export default function AdminBanners() {
     try {
       const response = await fetch(`/api/banners/${id}`, {
         method: 'DELETE',
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
       });
 
       const data = await response.json();

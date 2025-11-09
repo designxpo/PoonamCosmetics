@@ -45,7 +45,7 @@ export default function CategoryIcons() {
     return null;
   }
   return (
-    <section className="py-16 bg-background-secondary">
+    <section className="py-16 bg-white">
       <div className="container mx-auto px-4">
         <div className="text-center mb-12">
           <h2 className="text-3xl md:text-4xl font-bold text-text-primary mb-3">
@@ -61,23 +61,20 @@ export default function CategoryIcons() {
               href={`/category/${category.slug}`}
               className="flex flex-col items-center group cursor-pointer"
             >
-              <div className="w-24 h-24 md:w-28 md:h-28 rounded-full bg-white shadow-md flex items-center justify-center mb-3 group-hover:shadow-xl group-hover:scale-110 transition-all duration-300 overflow-hidden relative">
-                {category.image ? (
+              {category.image ? (
+                <div className="relative w-24 h-24 md:w-28 md:h-28 flex items-center justify-center overflow-visible">
+                  <span className="absolute inset-0 z-0 rounded-full pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity duration-300" style={{
+                    background: 'radial-gradient(circle, rgba(255,183,148,0.25) 0%, rgba(255,183,148,0.10) 60%, transparent 100%)',
+                    filter: 'blur(8px)'
+                  }} />
                   <Image
                     src={category.image}
                     alt={category.name}
                     fill
-                    className="object-cover"
+                    className="object-contain z-10 transition-transform duration-300 group-hover:scale-110"
                   />
-                ) : (
-                  <span className="text-4xl md:text-5xl">
-                    {category.icon || '✨'}
-                  </span>
-                )}
-              </div>
-              <span className="text-sm md:text-base font-medium text-text-primary group-hover:text-text-primary transition-colors text-center">
-                {category.name}
-              </span>
+                </div>
+              ) : null}
             </Link>
           ))}
         </div>

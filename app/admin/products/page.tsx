@@ -30,11 +30,8 @@ export default function AdminProductsPage() {
       const res = await fetch('/api/products?limit=1000&showAll=true');
       const data = await res.json();
       
-      console.log('Fetched products:', data);
-      
       if (data.success) {
         setProducts(data.products || []);
-        console.log('Products set:', data.products?.length || 0);
       } else {
         console.error('Failed to fetch products:', data.error);
         toast.error(data.error || 'Failed to load products');
@@ -160,12 +157,6 @@ export default function AdminProductsPage() {
     const matchesCategory = categoryFilter === 'all' || product.category?._id === categoryFilter;
     return matchesSearch && matchesCategory;
   });
-
-  // Debug logging
-  console.log('Total products:', products.length);
-  console.log('Filtered products:', filteredProducts.length);
-  console.log('Search query:', searchQuery);
-  console.log('Category filter:', categoryFilter);
 
   if (loading) {
     return (

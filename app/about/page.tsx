@@ -7,7 +7,7 @@ export default function AboutPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-slate-50 pb-24">
+      <main className="min-h-screen bg-primary-100 pb-24">
         <PageHero
           page="about"
           defaultEyebrow="The Brand"
@@ -15,7 +15,7 @@ export default function AboutPage() {
           defaultDescription="We exist to empower every individual to feel runway-ready, every single day. Discover what makes Poonam Cosmetics the preferred choice for beauty enthusiasts."
         />
 
-        <section className="container mx-auto px-4 -mt-12 relative z-10 space-y-16">
+        <section className="container mx-auto px-4 -mt-12 relative z-10 space-y-16 bg-white py-12 rounded-xl shadow-lg">
           {/* Story Section */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 rounded-sm border border-white/60 bg-white/90 backdrop-blur p-10 shadow-xl">
             <div className="space-y-6">

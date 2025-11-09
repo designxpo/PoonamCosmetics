@@ -93,7 +93,7 @@ ${formData.message}
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-slate-50 pb-24">
+      <main className="min-h-screen bg-primary-100 pb-24">
         <PageHero
           page="contact"
           defaultEyebrow="Contact"
@@ -101,7 +101,7 @@ ${formData.message}
           defaultDescription="Reach out to our concierge team for personalized recommendations, order support, or brand collaborations."
         />
 
-        <section className="container mx-auto px-4 -mt-12 relative z-10">
+        <section className="container mx-auto px-4 -mt-12 relative z-10 bg-white py-12 rounded-xl shadow-lg">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="rounded-sm border border-white/60 bg-white/90 backdrop-blur p-10 shadow-xl">
               <h2 className="text-3xl font-semibold text-slate-900 mb-8">Contact Information</h2>
@@ -152,7 +152,7 @@ ${formData.message}
                     <p className="text-slate-600 mb-2">Expect a response within 24 hours on business days.</p>
                     <a
                       href="mailto:info@poonamcosmetics.com"
-                      className="text-slate-900 underline-offset-4 hover:underline"
+                      className="text-slate-900"
                     >
                       info@poonamcosmetics.com
                     </a>

@@ -36,94 +36,95 @@ export default function ProductCard({ product }: ProductCardProps) {
   const reviewCount = Math.floor(Math.random() * 200) + 50;
 
   return (
-    <Link href={`/products/${product.slug}`} className="block group">
-      <div className="bg-white rounded-sm overflow-hidden hover:shadow-lg transition-shadow duration-300">
+    <div className="block group">
+      <div className="bg-white rounded-lg overflow-hidden border border-stone-200 hover:shadow-xl transition-all duration-300">
         {/* Product Image */}
-        <div className="relative aspect-square bg-slate-50 overflow-hidden">
+        <Link href={`/products/${product.slug}`} className="block relative aspect-square bg-stone-50 overflow-hidden">
           <Image
             src={product.images[0] || '/placeholder.jpg'}
             alt={product.name}
             fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             className="object-cover transition-transform duration-500 group-hover:scale-105"
           />
           
           {/* Sale Badge */}
           {product.featured && (
-            <div className="absolute top-3 left-3 bg-text-primary text-white text-xs font-semibold px-3 py-1 rounded-none">
+            <div className="absolute top-3 left-3 bg-black text-white text-xs font-bold px-4 py-1.5 tracking-wider">
               SALE
             </div>
           )}
           
           {/* Out of Stock Overlay */}
           {product.stock === 0 && (
-            <div className="absolute inset-0 bg-white/80 flex items-center justify-center">
-              <span className="text-slate-700 font-semibold text-sm">Out of Stock</span>
+            <div className="absolute inset-0 bg-white/90 flex items-center justify-center">
+              <span className="text-stone-700 font-semibold text-sm">Out of Stock</span>
             </div>
           )}
-
-          {/* Quick Add Button - Shows on Hover */}
-          <button
-            onClick={handleAddToCart}
-            disabled={product.stock === 0}
-            className="absolute bottom-3 left-3 right-3 bg-white text-text-primary border-2 border-text-primary py-2 rounded-none opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-2 text-sm font-medium disabled:bg-secondary-400 disabled:cursor-not-allowed hover:bg-text-primary hover:text-white"
-          >
-            <FiShoppingCart size={16} />
-            <span>Add to Cart</span>
-          </button>
-        </div>
+        </Link>
 
         {/* Product Details */}
         <div className="p-4">
           {/* Category & Brand */}
-          <div className="flex items-center gap-2 mb-1">
-            <p className="text-xs text-slate-500">
-              {typeof product.category === 'object' ? product.category.name : 'Cosmetics'}
-            </p>
-            {product.brand && typeof product.brand === 'object' && (
-              <>
-                <span className="text-slate-300">•</span>
-                <div className="flex items-center gap-1">
-                  {product.brand.logo && (
-                    <img 
-                      src={product.brand.logo} 
-                      alt={product.brand.name} 
-                      className="w-4 h-4 object-contain"
-                    />
-                  )}
-                  <span className="text-xs text-slate-500">{product.brand.name}</span>
-                </div>
-              </>
-            )}
-          </div>
-
-          {/* Product Name */}
-          <h3 className="text-sm font-medium text-slate-900 mb-2 line-clamp-2 group-hover:text-slate-700">
-            {product.name}
-          </h3>
-
-          {/* Rating */}
-          <div className="flex items-center gap-1 mb-2">
-            {[...Array(5)].map((_, i) => (
-              <FiStar
-                key={i}
-                size={12}
-                className={i < Math.floor(rating) ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}
-              />
-            ))}
-            <span className="text-xs text-slate-500 ml-1">({reviewCount})</span>
-          </div>
-
-          {/* Price */}
-          <div className="flex items-center justify-between">
-            <div className="flex items-baseline gap-2">
-              <span className="text-lg font-bold text-slate-900">₹{product.price}</span>
-              {product.featured && (
-                <span className="text-sm text-slate-400 line-through">₹{Math.floor(product.price * 1.4)}</span>
+          <Link href={`/products/${product.slug}`}>
+            <div className="flex items-center gap-2 mb-1.5">
+              <p className="text-xs text-stone-500">
+                {typeof product.category === 'object' ? product.category.name : 'Cosmetics'}
+              </p>
+              {product.brand && typeof product.brand === 'object' && (
+                <>
+                  <span className="text-stone-300">•</span>
+                  <div className="flex items-center gap-1">
+                    {product.brand.logo && (
+                      <img 
+                        src={product.brand.logo} 
+                        alt={product.brand.name} 
+                        className="w-4 h-4 object-contain"
+                      />
+                    )}
+                    <span className="text-xs text-stone-500">{product.brand.name}</span>
+                  </div>
+                </>
               )}
             </div>
-          </div>
+
+            {/* Product Name */}
+            <h3 className="text-base font-semibold text-stone-800 mb-2 line-clamp-2 group-hover:text-amber-700 transition-colors">
+              {product.name}
+            </h3>
+
+            {/* Rating */}
+            <div className="flex items-center gap-1 mb-3">
+              {[...Array(5)].map((_, i) => (
+                <FiStar
+                  key={i}
+                  size={14}
+                  className={i < Math.floor(rating) ? 'fill-amber-500 text-amber-500' : 'text-stone-300'}
+                />
+              ))}
+              <span className="text-xs text-stone-500 ml-1">({reviewCount})</span>
+            </div>
+
+            {/* Price */}
+            <div className="flex items-center gap-2 mb-3">
+              <span className="text-xl font-bold text-stone-900">₹{product.price}</span>
+              {product.featured && (
+                <span className="text-sm text-stone-400 line-through">₹{Math.floor(product.price * 1.4)}</span>
+              )}
+            </div>
+          </Link>
+
+          {/* Add to Cart Button - Always Visible */}
+          <button
+            onClick={handleAddToCart}
+            disabled={product.stock === 0}
+            className="w-full bg-white text-stone-800 border-2 border-accent-500 py-2.5 rounded-none flex items-center justify-center gap-2 text-sm font-semibold disabled:bg-stone-200 disabled:border-stone-300 disabled:text-stone-400 disabled:cursor-not-allowed hover:bg-accent-500 hover:text-white hover:border-accent-500 transition-all duration-200"
+          >
+            <FiShoppingCart size={18} />
+            <span>Add to Cart</span>
+          </button>
         </div>
       </div>
-    </Link>
+    </div>
   );
 }

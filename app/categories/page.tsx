@@ -23,8 +23,8 @@ export default async function CategoriesPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-slate-50 pb-20">
-        <section className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white py-20">
+      <main className="min-h-screen bg-primary-100 pb-20">
+        <section className="bg-primary-100 py-20">
           <div className="container mx-auto px-4">
             <p className="uppercase tracking-[0.3em] text-xs text-secondary-200">Collections</p>
             <h1 className="mt-4 text-4xl md:text-5xl font-semibold max-w-2xl">
@@ -36,7 +36,7 @@ export default async function CategoriesPage() {
           </div>
         </section>
 
-        <section className="container mx-auto px-4 -mt-12 relative z-10">
+  <section className="container mx-auto px-4 -mt-12 relative z-10 bg-white py-12 rounded-xl shadow-lg">
           {categories.length === 0 ? (
             <div className="text-center py-24">
               <div className="text-6xl mb-4">📂</div>

@@ -1,0 +1,27 @@
+{
+  "techStack": [
+    "Next.js",
+    "React",
+    "TypeScript",
+    "Tailwind CSS",
+    "MongoDB",
+    "Zustand",
+    "JWT Auth",
+    "Node.js"
+  ],
+  "features": [
+    "Cosmetics e-commerce UI",
+    "Admin panel for categories, products, banners",
+    "JWT-based authentication",
+    "Product cards with sale badge and add to cart",
+    "Brand/category logo display",
+    "Section background alternation",
+    "Image upload for categories/products",
+    "API endpoints for CRUD operations",
+    "Responsive design",
+    "Custom color palette (beige, gold, brown)",
+    "Order management",
+    "User login/register",
+    "Product reviews"
+  ]
+}

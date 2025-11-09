@@ -88,80 +88,84 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-md shadow-lg border-b border-slate-100">
-      {/* Upper Nav - Logo, Search, Account, Cart */}
-      <div className="border-b border-slate-100">
-        <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center justify-between">
-            {/* Logo */}
-            <Link href="/" className="flex items-center flex-shrink-0">
-              <div className="relative h-10 w-40 md:h-12 md:w-48">
-                <Image
-                  src="/images/branding/logo.png"
-                  alt="Poonam Cosmetics"
-                  fill
-                  className="object-contain drop-shadow-xl"
-                  priority
-                />
-              </div>
-            </Link>
+    <header className="sticky top-0 z-50 bg-white shadow-sm border-b border-stone-200">
+      {/* Top Info Bar */}
+      <div className="bg-gradient-to-r from-stone-100 via-amber-50 to-stone-100 border-b border-stone-200">
+        <div className="container mx-auto px-4">
+          <div className="flex justify-between items-center py-2 text-xs">
+            <div className="flex items-center gap-4 text-stone-700">
+              <span className="hidden md:inline font-medium tracking-wider">PREMIUM JOY EXPERIENCE - 20% OFF EVERYTHING</span>
+              <span className="md:hidden">20% OFF SALE</span>
+            </div>
+            <div className="flex items-center gap-4 text-stone-700">
+              <span className="hidden sm:inline font-medium">📞 +91 99999 99999</span>
+            </div>
+          </div>
+        </div>
+      </div>
 
-            {/* Right Side Actions - Search, Account, Cart */}
-            <div className="flex items-center space-x-3 md:space-x-4">
-            {/* Desktop Search Toggle */}
+      {/* Main Navigation Bar */}
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between py-5 relative">
+          {/* Left - Hamburger Menu for Mobile */}
+          <div className="flex-1 flex items-center">
             <button
-              className="hidden md:block text-text-primary hover:text-text-primary transition-colors"
-              onClick={() => setSearchOpen(!searchOpen)}
-              aria-label="Toggle search"
+              className="md:hidden text-stone-700 hover:text-stone-900"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label="Toggle menu"
             >
-              <FiSearch size={22} />
+              {mobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+            </button>
+          </div>
+
+          {/* Center - Logo */}
+          <Link href="/" className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <div className="relative h-14 w-52 md:h-20 md:w-72">
+              <Image
+                src="/images/branding/logo_Header.png"
+                alt="Poonam Cosmetics"
+                fill
+                sizes="(max-width: 768px) 208px, 288px"
+                className="object-contain"
+                priority
+              />
+            </div>
+          </Link>
+
+          {/* Right - Icons */}
+          <div className="flex-1 flex items-center justify-end space-x-4 md:space-x-6">
+            <button
+              className="text-stone-700 hover:text-stone-900 transition-colors"
+              onClick={() => setSearchOpen(!searchOpen)}
+              aria-label="Search"
+            >
+              <FiSearch size={20} />
             </button>
 
-            {/* Mobile Search Toggle */}
-            <button
-              className="md:hidden text-text-primary"
-              onClick={() => setSearchOpen(!searchOpen)}
-              aria-label="Toggle search"
-            >
-              <FiSearch size={24} />
-            </button>
-
-            {/* User Menu - Desktop */}
+            {/* User Menu */}
             {mounted && isAuthenticated ? (
-              <div className="hidden md:block relative" ref={userMenuRef}>
+              <div className="relative" ref={userMenuRef}>
                 <button
                   onClick={() => setUserMenuOpen(!userMenuOpen)}
-                  className="flex items-center space-x-2 text-text-primary hover:text-text-primary transition-colors"
+                  className="text-stone-700 hover:text-stone-900 transition-colors"
                   aria-label="User menu"
                 >
-                  <div className="w-8 h-8 rounded-full bg-text-primary flex items-center justify-center text-white font-semibold border border-border-main">
-                    {user?.name?.charAt(0).toUpperCase() || 'U'}
-                  </div>
-                  <span className="font-medium hidden lg:inline">{user?.name?.split(' ')[0]}</span>
+                  <FiUser size={20} />
                 </button>
 
-                {/* Dropdown Menu */}
                 {userMenuOpen && (
-                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-sm shadow-lg border border-contrast-500 py-2 z-50">
-                    <div className="px-4 py-2 border-b border-contrast-500">
-                      <p className="font-semibold text-text-primary truncate">{user?.name}</p>
-                      <p className="text-xs text-text-secondary truncate">{user?.email}</p>
+                  <div className="absolute right-0 mt-2 w-48 bg-white rounded-sm shadow-lg border border-stone-200 py-2 z-50">
+                    <div className="px-4 py-2 border-b border-stone-200">
+                      <p className="font-semibold text-stone-900 truncate">{user?.name}</p>
+                      <p className="text-xs text-stone-500 truncate">{user?.email}</p>
                     </div>
                     <Link
                       href="/account"
-                      className="flex items-center space-x-3 px-4 py-2 text-text-primary hover:bg-contrast-50 transition-colors"
+                      className="flex items-center space-x-3 px-4 py-2 text-stone-700 hover:bg-stone-50 transition-colors"
                       onClick={() => setUserMenuOpen(false)}
                     >
                       <FiPackage size={18} />
                       <span>My Orders</span>
-                    </Link>
-                    <Link
-                      href="/account"
-                      className="flex items-center space-x-3 px-4 py-2 text-text-primary hover:bg-contrast-50 transition-colors"
-                      onClick={() => setUserMenuOpen(false)}
-                    >
-                      <FiUser size={18} />
-                      <span>My Profile</span>
                     </Link>
                     <button
                       onClick={handleLogout}
@@ -174,142 +178,70 @@ export default function Header() {
                 )}
               </div>
             ) : mounted ? (
-              <div className="hidden md:flex items-center space-x-2 text-sm">
-                <Link
-                  href="/login"
-                  className="text-text-primary hover:text-text-primary font-medium transition-colors"
-                >
-                  Login
-                </Link>
-                <span className="text-text-secondary">|</span>
-                <Link
-                  href="/register"
-                  className="text-text-primary hover:text-text-primary font-medium transition-colors"
-                >
-                  Register
-                </Link>
-              </div>
+              <Link
+                href="/login"
+                className="text-stone-700 hover:text-stone-900 transition-colors"
+                aria-label="Login"
+              >
+                <FiUser size={20} />
+              </Link>
             ) : null}
 
-            {/* Cart */}
             <Link
               href="/cart"
-              className="relative text-text-primary hover:text-text-primary transition-colors"
+              className="relative text-stone-700 hover:text-stone-900 transition-colors"
               aria-label="Shopping cart"
             >
-              <FiShoppingCart size={24} />
+              <FiShoppingCart size={20} />
               {mounted && totalItems > 0 && (
-                <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-semibold">
+                <span className="absolute -top-2 -right-2 bg-black text-white text-xs w-5 h-5 rounded-full flex items-center justify-center font-semibold">
                   {totalItems}
                 </span>
               )}
             </Link>
-
-            {/* Mobile Menu Toggle */}
-            <button
-              className="lg:hidden text-text-primary"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              aria-label="Toggle menu"
-            >
-              {mobileMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
-            </button>
-            </div>
           </div>
         </div>
+
+        {/* Desktop Navigation Menu */}
+        <nav className="hidden md:block border-t-2 border-stone-200 bg-gradient-to-b from-stone-50 to-white">
+          <ul className="container mx-auto flex items-center justify-center gap-1 py-3.5 px-4">
+            {navigationItems.length === 0 && (
+              <li className="text-stone-400 text-xs">Loading...</li>
+            )}
+            {navigationItems.map((item) => (
+              <li key={item._id}>
+                <Link 
+                  href={item.href} 
+                  className="px-4 py-2 text-xs font-semibold text-stone-600 hover:text-amber-700 hover:bg-stone-100 rounded-md tracking-[0.08em] uppercase transition-all duration-200"
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
       </div>
 
-      {/* Second Nav - Menu Items */}
-      <div className="hidden md:block bg-gradient-to-r from-blue-50 via-pink-50 to-blue-50" style={{ backgroundColor: '#FBEAEB' }}>
-        <div className="container mx-auto px-4">
-          <nav className="flex items-center justify-center">
-            <ul className="flex items-center space-x-6 md:space-x-8 lg:space-x-12 py-4 text-sm md:text-[15px] tracking-wide" style={{ color: '#2F3C7E' }}>
-              {navigationItems.map((item) => (
-                <li key={item._id}>
-                  <Link href={item.href} className="font-medium transition-all hover:opacity-70 hover:scale-105 inline-block">
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
-        </div>
-      </div>
-
-      {/* Search Bar - Dropdown with Modern UI */}
+      {/* Search Overlay */}
       {searchOpen && (
-        <div className="bg-gradient-to-b from-white to-slate-50 border-t border-slate-200 shadow-lg">
+        <div className="absolute top-full left-0 right-0 bg-white border-t border-stone-200 shadow-lg z-50">
           <div className="container mx-auto px-4 py-6">
-            <form onSubmit={handleSearch}>
-              <div className="relative max-w-3xl mx-auto">
-                {/* Search Icon - Left Side */}
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
-                  <FiSearch size={22} />
-                </div>
-                
-                {/* Input Field */}
+            <form onSubmit={handleSearch} className="max-w-2xl mx-auto">
+              <div className="relative">
                 <input
                   type="text"
-                  id="header-search"
-                  name="search"
-                  placeholder="Search for lipsticks, foundations, skincare..."
+                  placeholder="Search for products..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-14 pr-32 py-4 rounded-xl border-2 border-slate-200 bg-white text-slate-800 placeholder-slate-400 
-                           focus:outline-none focus:ring-4 focus:ring-primary-500/20 focus:border-primary-500 
-                           transition-all duration-200 shadow-sm hover:shadow-md text-base"
+                  className="w-full px-4 py-3 pr-24 border-b-2 border-stone-300 focus:border-amber-700 outline-none text-lg transition-colors"
                   autoFocus
                 />
-                
-                {/* Search Button */}
                 <button
                   type="submit"
-                  disabled={!searchQuery.trim()}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 px-6 py-2.5 rounded-lg 
-                           bg-primary-500 text-white font-medium
-                           hover:bg-primary-600 active:scale-95
-                           disabled:opacity-50 disabled:cursor-not-allowed
-                           transition-all duration-200 shadow-md hover:shadow-lg
-                           flex items-center gap-2"
-                  aria-label="Search"
+                  className="absolute right-0 top-1/2 -translate-y-1/2 px-6 py-2 text-sm font-medium text-stone-700 hover:text-stone-900 transition-colors"
                 >
-                  <span className="hidden sm:inline">Search</span>
-                  <FiSearch size={18} className="sm:hidden" />
+                  Search
                 </button>
-
-                {/* Close Button */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSearchOpen(false);
-                    setSearchQuery('');
-                  }}
-                  className="absolute -top-12 right-0 text-slate-600 hover:text-slate-900 transition-colors"
-                  aria-label="Close search"
-                >
-                  <FiX size={24} />
-                </button>
-              </div>
-
-              {/* Popular Searches */}
-              <div className="max-w-3xl mx-auto mt-4">
-                <p className="text-xs text-slate-500 mb-2">Popular searches:</p>
-                <div className="flex flex-wrap gap-2">
-                  {['Lipstick', 'Foundation', 'Mascara', 'Skincare', 'Bridal Makeup'].map((term) => (
-                    <button
-                      key={term}
-                      type="button"
-                      onClick={() => {
-                        setSearchQuery(term);
-                        handleSearch({ preventDefault: () => {} } as React.FormEvent);
-                      }}
-                      className="px-3 py-1.5 rounded-full bg-white border border-slate-200 
-                               text-xs text-slate-700 hover:border-primary-500 hover:text-primary-600 
-                               hover:bg-primary-50 transition-all duration-200"
-                    >
-                      {term}
-                    </button>
-                  ))}
-                </div>
               </div>
             </form>
           </div>
@@ -318,18 +250,19 @@ export default function Header() {
 
       {/* Mobile Navigation Menu */}
       {mobileMenuOpen && (
-        <nav className="lg:hidden pt-4 pb-2 border-t border-slate-100 mt-4">
-          <ul className="space-y-3">
+        <div className="md:hidden bg-gradient-to-b from-stone-50 to-white border-t-2 border-stone-200 shadow-lg">
+          <nav className="container mx-auto px-4 py-5">
+            <ul className="space-y-1">
               {/* User Info - Mobile */}
               {mounted && isAuthenticated && user && (
-                <li className="pb-3 mb-3 border-b border-slate-100">
+                <li className="pb-3 mb-3 border-b border-stone-200">
                   <div className="flex items-center space-x-3">
-                    <div className="w-10 h-10 rounded-none bg-text-primary flex items-center justify-center text-white font-semibold border border-border-main">
+                    <div className="w-10 h-10 rounded-full bg-amber-700 flex items-center justify-center text-white font-semibold">
                       {user.name?.charAt(0).toUpperCase() || 'U'}
                     </div>
                     <div>
-                      <p className="font-semibold text-slate-800">{user.name}</p>
-                      <p className="text-xs text-slate-500">{user.email}</p>
+                      <p className="font-semibold text-stone-900">{user.name}</p>
+                      <p className="text-xs text-stone-500">{user.email}</p>
                     </div>
                   </div>
                 </li>
@@ -339,7 +272,7 @@ export default function Header() {
                 <li key={item._id}>
                   <Link
                     href={item.href}
-                    className="block py-2 font-medium transition-colors text-slate-700 hover:text-text-primary"
+                    className="block px-4 py-3 text-sm font-semibold text-stone-600 hover:text-amber-700 hover:bg-stone-50 rounded-lg uppercase tracking-wide transition-all"
                     onClick={() => setMobileMenuOpen(false)}
                   >
                     {item.label}
@@ -350,24 +283,14 @@ export default function Header() {
               {/* Auth Links - Mobile */}
               {mounted && isAuthenticated ? (
                 <>
-                  <li className="pt-3 mt-3 border-t border-slate-100">
+                  <li className="pt-3 mt-3 border-t border-stone-200">
                     <Link
                       href="/account"
-                      className="flex items-center space-x-3 py-2 font-medium transition-colors text-slate-700 hover:text-text-primary"
+                      className="flex items-center space-x-3 py-2 text-stone-700 hover:text-stone-900 transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       <FiPackage size={18} />
                       <span>My Orders</span>
-                    </Link>
-                  </li>
-                  <li>
-                    <Link
-                      href="/account"
-                      className="flex items-center space-x-3 py-2 font-medium transition-colors text-slate-700 hover:text-text-primary"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <FiUser size={18} />
-                      <span>My Profile</span>
                     </Link>
                   </li>
                   <li>
@@ -376,7 +299,7 @@ export default function Header() {
                         setMobileMenuOpen(false);
                         handleLogout();
                       }}
-                      className="w-full flex items-center space-x-3 py-2 font-medium transition-colors text-red-600 hover:text-red-700"
+                      className="w-full flex items-center space-x-3 py-2 text-red-600 hover:text-red-700 transition-colors"
                     >
                       <FiLogOut size={18} />
                       <span>Logout</span>
@@ -385,10 +308,10 @@ export default function Header() {
                 </>
               ) : mounted ? (
                 <>
-                  <li className="pt-3 mt-3 border-t border-slate-100">
+                  <li className="pt-3 mt-3 border-t border-stone-200">
                     <Link
                       href="/login"
-                      className="flex items-center space-x-3 py-2 font-medium transition-colors text-slate-700 hover:text-text-primary"
+                      className="flex items-center space-x-3 py-2 text-stone-700 hover:text-stone-900 transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       <FiUser size={18} />
@@ -398,7 +321,7 @@ export default function Header() {
                   <li>
                     <Link
                       href="/register"
-                      className="flex items-center space-x-3 py-2 font-medium transition-colors text-slate-700 hover:text-text-primary"
+                      className="flex items-center space-x-3 py-2 text-stone-700 hover:text-stone-900 transition-colors"
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       <FiUser size={18} />
@@ -409,7 +332,8 @@ export default function Header() {
               ) : null}
             </ul>
           </nav>
-        )}
+        </div>
+      )}
     </header>
   );
 }

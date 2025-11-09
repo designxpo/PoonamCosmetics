@@ -76,13 +76,13 @@ export default function HeroBannerCarousel({
   };
 
   return (
-    <section className="relative w-full h-[500px] md:h-[600px] lg:h-[700px] overflow-hidden bg-slate-100">
+    <section className="relative w-full h-[70vh] md:h-[75vh] lg:h-[80vh] overflow-hidden bg-gray-100">
       {/* Slides */}
       <div className="relative w-full h-full">
         {slides.map((slideItem, index) => (
           <div
             key={slideItem.id}
-            className={`absolute inset-0 transition-opacity duration-700 ${
+            className={`absolute inset-0 transition-opacity duration-1000 ${
               index === currentSlide ? 'opacity-100 z-10' : 'opacity-0 z-0'
             }`}
           >
@@ -95,99 +95,85 @@ export default function HeroBannerCarousel({
               priority={index === 0}
             />
 
-            {/* Overlay */}
+            {/* Subtle Overlay */}
             {slideItem.overlay && (
-              <div className="absolute inset-0 bg-black/30 z-10" />
+              <div className="absolute inset-0 bg-black/20 z-10" />
             )}
           </div>
         ))}
       </div>
 
-      {/* Content Overlay */}
-      <div className="absolute inset-0 z-20 flex items-center">
-        <div className="container mx-auto px-4">
-          <div className={`flex flex-col ${getTextAlignmentClasses()} max-w-3xl ${
-            slide.textPosition === 'right' ? 'ml-auto' : 
-            slide.textPosition === 'center' ? 'mx-auto' : ''
-          }`}>
-            {/* Subtitle */}
-            {slide.subtitle && (
-              <p 
-                className="text-sm md:text-base uppercase tracking-[0.3em] mb-4 font-medium opacity-90"
-                style={{ color: textColor }}
-              >
-                {slide.subtitle}
-              </p>
-            )}
-
-            {/* Title */}
-            <h1 
-              className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold mb-6 leading-tight"
+      {/* Content Overlay - Centered */}
+      <div className="absolute inset-0 z-20 flex items-center justify-center">
+        <div className="text-center px-4 max-w-4xl">
+          {/* Subtitle (Label) */}
+          {slide.subtitle && (
+            <p 
+              className="text-xs md:text-sm uppercase tracking-[0.3em] mb-3 font-medium"
               style={{ color: textColor }}
             >
-              {slide.title}
-            </h1>
+              {slide.subtitle}
+            </p>
+          )}
 
-            {/* Description */}
-            {slide.description && (
-              <p 
-                className="text-lg md:text-xl mb-8 max-w-2xl opacity-90"
-                style={{ color: textColor }}
+          {/* Title */}
+          <h1 
+            className="text-3xl md:text-5xl lg:text-6xl xl:text-7xl font-light mb-8 leading-tight tracking-wide"
+            style={{ color: textColor }}
+          >
+            {slide.title}
+          </h1>
+
+          {/* CTA Button */}
+          {slide.ctaText && slide.ctaLink && (
+            <div>
+              <Link
+                href={slide.ctaLink}
+                className="inline-block px-10 py-3 text-sm font-medium tracking-wider uppercase transition-all duration-300 hover:scale-105 border-2"
+                style={{
+                  backgroundColor: buttonColor,
+                  color: buttonTextColor,
+                  borderColor: buttonTextColor
+                }}
               >
-                {slide.description}
-              </p>
-            )}
-
-            {/* CTA Button */}
-            {slide.ctaText && slide.ctaLink && (
-              <div>
-                <Link
-                  href={slide.ctaLink}
-                  className="inline-block px-8 py-4 rounded-none font-semibold text-base md:text-lg transition-all duration-300 hover:opacity-90 hover:scale-105"
-                  style={{
-                    backgroundColor: buttonColor,
-                    color: buttonTextColor
-                  }}
-                >
-                  {slide.ctaText}
-                </Link>
-              </div>
-            )}
-          </div>
+                {slide.ctaText}
+              </Link>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Navigation Arrows */}
+      {/* Navigation Arrows - Minimal */}
       {slides.length > 1 && (
         <>
           <button
             onClick={goToPrevious}
-            className="absolute left-4 top-1/2 -translate-y-1/2 z-30 bg-white/80 hover:bg-white text-slate-900 p-3 rounded-full transition-all duration-300 backdrop-blur-sm"
+            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 text-white hover:text-gray-300 transition-colors"
             aria-label="Previous slide"
           >
-            <FiChevronLeft size={24} />
+            <FiChevronLeft size={32} strokeWidth={1} />
           </button>
           <button
             onClick={goToNext}
-            className="absolute right-4 top-1/2 -translate-y-1/2 z-30 bg-white/80 hover:bg-white text-slate-900 p-3 rounded-full transition-all duration-300 backdrop-blur-sm"
+            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 text-white hover:text-gray-300 transition-colors"
             aria-label="Next slide"
           >
-            <FiChevronRight size={24} />
+            <FiChevronRight size={32} strokeWidth={1} />
           </button>
         </>
       )}
 
-      {/* Dots Navigation */}
+      {/* Dots Navigation - Minimal */}
       {slides.length > 1 && (
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-2">
+        <div className="absolute bottom-6 md:bottom-8 left-1/2 -translate-x-1/2 z-30 flex gap-2">
           {slides.map((_, index) => (
             <button
               key={index}
               onClick={() => goToSlide(index)}
-              className={`w-3 h-3 rounded-full transition-all duration-300 ${
+              className={`transition-all duration-300 ${
                 index === currentSlide
-                  ? 'bg-white w-8'
-                  : 'bg-white/50 hover:bg-white/75'
+                  ? 'w-8 h-1.5 bg-white'
+                  : 'w-8 h-0.5 bg-white/60 hover:bg-white/80'
               }`}
               aria-label={`Go to slide ${index + 1}`}
             />

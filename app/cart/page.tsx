@@ -136,7 +136,7 @@ export default function CartPage() {
   return (
     <>
       <Header />
-      <main className="min-h-screen bg-slate-50 pb-20">
+      <main className="min-h-screen bg-primary-100 pb-20">
         <section className="bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white py-20">
           <div className="container mx-auto px-4 text-center">
             <p className="uppercase tracking-[0.3em] text-xs text-secondary-200">Your Cart</p>
@@ -149,7 +149,7 @@ export default function CartPage() {
           </div>
         </section>
 
-        <div className="container mx-auto px-4 -mt-12 relative z-10">
+        <div className="container mx-auto px-4 -mt-12 relative z-10 bg-white py-12 rounded-xl shadow-lg">
         {items.length === 0 ? (
           <div className="rounded-sm border border-white/60 bg-white/90 backdrop-blur p-16 shadow-xl text-center">
             <div className="text-6xl mb-4">🛒</div>
@@ -205,7 +205,7 @@ export default function CartPage() {
                         <div className="pt-2 border-t border-amber-200 bg-amber-50 -mx-4 -mb-4 mt-3 px-4 py-3">
                           <p className="text-xs text-amber-800">
                             ⚠️ Please complete your delivery address in{' '}
-                            <Link href="/account?tab=profile" className="underline font-semibold">
+                            <Link href="/account?tab=profile" className="font-semibold">
                               account settings
                             </Link>
                           </p>

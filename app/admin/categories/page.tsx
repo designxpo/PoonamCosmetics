@@ -5,8 +5,10 @@ import AdminLayout from '@/components/admin/AdminLayout';
 import { FiEdit2, FiTrash2, FiPlus, FiGrid, FiUpload, FiX } from 'react-icons/fi';
 import Image from 'next/image';
 import toast from 'react-hot-toast';
+import { useAuthStore } from '@/store/authStore';
 
 export default function AdminCategoriesPage() {
+  const { token } = useAuthStore();
   const [categories, setCategories] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
@@ -89,19 +91,18 @@ export default function AdminCategoriesPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
     const url = editingId ? `/api/categories/${editingId}` : '/api/categories';
     const method = editingId ? 'PUT' : 'POST';
-
     try {
       const response = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
         body: JSON.stringify(formData),
       });
-
       const data = await response.json();
-
       if (data.success) {
         toast.success(editingId ? 'Category updated!' : 'Category created!');
         fetchCategories();
@@ -128,14 +129,14 @@ export default function AdminCategoriesPage() {
 
   const handleDelete = async (id: string) => {
     if (!confirm('Are you sure you want to delete this category?')) return;
-
     try {
       const response = await fetch(`/api/categories/${id}`, {
         method: 'DELETE',
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
       });
-
       const data = await response.json();
-
       if (data.success) {
         toast.success('Category deleted!');
         fetchCategories();

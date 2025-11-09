@@ -119,7 +119,7 @@ export default function PreviewPage() {
               {banners.length === 0 ? (
                 <div className="text-center py-12 text-slate-500">
                   <p>No active banners found</p>
-                  <Link href="/admin/banners" className="text-primary-600 hover:underline mt-2 inline-block">
+                  <Link href="/admin/banners" className="text-primary-600 mt-2 inline-block">
                     Add Banners
                   </Link>
                 </div>
@@ -209,7 +209,7 @@ export default function PreviewPage() {
               {products.length === 0 ? (
                 <div className="text-center py-12 text-slate-500">
                   <p>No products found</p>
-                  <Link href="/admin/products/new" className="text-primary-600 hover:underline mt-2 inline-block">
+                  <Link href="/admin/products/new" className="text-primary-600 mt-2 inline-block">
                     Add Products
                   </Link>
                 </div>

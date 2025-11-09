@@ -64,7 +64,7 @@ export default function BestDealsSection() {
         <div className="text-center mt-12">
           <Link
             href="/products?sale=true"
-            className="inline-block bg-white text-text-primary border-2 border-text-primary px-8 py-3 rounded-none font-semibold hover:bg-text-primary hover:text-white transition-colors"
+            className="inline-block bg-white text-accent-500 border-2 border-accent-500 px-8 py-3 rounded-none font-semibold hover:bg-accent-500 hover:text-white hover:border-accent-500 transition-colors"
           >
             View All Deals
           </Link>

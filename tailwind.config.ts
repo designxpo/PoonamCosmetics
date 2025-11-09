@@ -14,58 +14,58 @@ const config: Config = {
       },
       colors: {
         primary: {
-          50: '#F5F5F5',
-          100: '#E8E8E8',
-          200: '#D1D1D1',
-          300: '#B0B0B0',
-          400: '#888888',
-          500: '#000000',  // Black (main primary)
-          600: '#000000',
-          700: '#000000',
-          800: '#000000',
-          900: '#000000',
+          50: '#FBF8F5',
+          100: '#F7F0E8',
+          200: '#EFE1D1',
+          300: '#E8D7C3',  // Main beige
+          400: '#D4BFA7',
+          500: '#C0A88B',  // Medium beige
+          600: '#A08868',
+          700: '#7A6850',
+          800: '#544838',
+          900: '#2E281C',
         },
         secondary: {
-          50: '#FFFFFF',
-          100: '#F8F8F8',
-          200: '#F5F5F5',
-          300: '#EDEDED',
-          400: '#E8E8E8',
-          500: '#D9D9D9',
-          600: '#CCCCCC',
-          700: '#999999',
-          800: '#666666',
-          900: '#333333',
+          50: '#FEFEFE',
+          100: '#FDFCFB',
+          200: '#FAF8F5',
+          300: '#F5F2EE',
+          400: '#EBE7E1',
+          500: '#D9D3CB',
+          600: '#B8AFA3',
+          700: '#8C837A',
+          800: '#615951',
+          900: '#362F28',
         },
         accent: {
-          50: '#F5F5F5',
-          100: '#E8E8E8',
-          200: '#D1D1D1',
-          300: '#B0B0B0',
-          400: '#888888',
-          500: '#000000',
-          600: '#000000',
-          700: '#000000',
-          800: '#000000',
-          900: '#000000',
+          50: '#FAF8F3',
+          100: '#F5F1E8',
+          200: '#EBE3D1',
+          300: '#DDD0B0',
+          400: '#C9B888',
+          500: '#d4af37',  // Gold accent
+          600: '#b8961e',
+          700: '#8a7116',
+          800: '#5c4b0f',
+          900: '#2e2508',
         },
         text: {
-          primary: '#000000',    // Pure black
-          secondary: '#666666',  // Grey for secondary text
-          muted: '#999999',
-          light: '#CCCCCC',
+          primary: '#2E281C',    // Dark brown
+          secondary: '#615951',  // Medium brown
+          muted: '#8C837A',
+          light: '#B8AFA3',
         },
         background: {
-          main: '#FFFFFF',       // Pure white
-          secondary: '#F8F8F8',  // Light grey
-          section: '#FAFAFA',    // Very light grey
-          card: '#FFFFFF',       // White cards
-          cream: '#FFFFFF',      // White
+          main: '#FDFCFB',       // Off white
+          secondary: '#F7F0E8',  // Light beige
+          section: '#E8D7C3',    // Beige
+          card: '#FFFFFF',       // Pure white
+          cream: '#FAF8F5',      // Cream
           white: '#FFFFFF',
         },
         border: {
-          light: '#E8E8E8',
-          main: '#000000',
+          light: '#EBE7E1',
+          main: '#D9D3CB',
         },
       },
       fontFamily: {

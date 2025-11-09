@@ -390,7 +390,7 @@ export default function ProductDetailPage({
                       <span className="text-slate-900 font-semibold">Size :</span>
                       <span className="text-slate-600">{selectedSize}</span>
                     </div>
-                    <button className="text-slate-600 text-sm underline hover:text-slate-900">
+                    <button className="text-slate-600 text-sm hover:text-slate-900">
                       View Size Guide
                     </button>
                   </div>
